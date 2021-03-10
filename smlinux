@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-03-08-1118
+TIMESTAMP=2021-03-09-2248
 
 STARTSEC=$SECONDS
 
@@ -374,7 +374,7 @@ do
 		ln -s "$SMLINUX"/Cleaner-Aesthetics/gfx "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/gfx
 	fi
 done
-	for preset in render96ex r96alpha r96proto render96ex.old r96alpha.old r96proto.old
+	for preset in render96ex r96alpha r96proto r96tester render96ex.old r96alpha.old r96proto.old r96tester.old r96master r96master.old
 do
 	if [ -d "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/.git ] && [ -d "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/gfx ]; then
 		echo Moving Render 96 HD Texture repository to:
@@ -386,14 +386,14 @@ do
 		break
 	fi
 done
-	for preset in render96ex r96alpha r96proto
+	for preset in render96ex r96alpha r96proto r96tester r96master
 do
 	if [ -d "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/.git ] && [ -d "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/gfx ]; then
 		rm -rf "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/gfx "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/.git
 		ln -s "$SMLINUX"/RENDER96-HD-TEXTURE-PACK/gfx "$BASEPATH"/"$preset"/build/"$VERSION"_"$TARGET"/res/gfx
 	fi
 done
-	for preset in sm64ex sm64nx sm64ex-coop render96ex cheaterex sm64dos sm64-portweb sm64exweb sm64-port-android-base androidex sm64pc sm64-port r96proto r96alpha emm-ody coop-unstable
+	for preset in sm64ex sm64nx sm64ex-coop render96ex cheaterex sm64dos sm64-portweb sm64exweb sm64-port-android-base androidex sm64pc sm64-port r96proto r96alpha r96master emm-ody coop-unstable
 do
 	if [ -d "$BASEPATH"/"$preset" ]; then
 		for version in us jp eu sh
@@ -547,39 +547,31 @@ exit
 # 6    cyan      COLOR_CYAN      0,1,1
 # 7    white     COLOR_WHITE     1,1,1
 greenecho(){
-#tput setab 0  # black background
 tput setaf 2  # greeen text
 tput bold
 echo "$@"
 tput sgr0 # reset
-#tput setab 0  # black background
 tput setaf 7 # white text
 }
 pinkecho(){
-#tput setab 0  # black background
 tput setaf 5  # magenta text
 tput bold
 echo "$@"
 tput sgr0 # reset
-tput setab 0  # black background
 tput setaf 7 # white text
 }
 redecho(){
-#tput setab 0  # black background
 tput setaf 1  # red text
 tput bold
 echo "$@"
 tput sgr0 # reset
-#tput setab 0  # black background
 tput setaf 7 # white text
 }
 bluecho(){
-#tput setab 0  # black background
 tput setaf 4  # red text
 tput bold
 echo "$@"
 tput sgr0 # reset
-#tput setab 0  # black background
 tput setaf 7 # white text
 }
 
@@ -651,7 +643,7 @@ fi
 }
 
 domymenu(){
-if [ ! -f "$BASEPATH"/"$PRESET"/enhancements/menu-arrows.patch ]; then
+if [ "DOGS" = "CATS" ] && [ ! -f "$BASEPATH"/"$PRESET"/enhancements/menu-arrows.patch ]; then   # skipping for now, needs testing on all latest versions before force applying
 	if [ "$PRESET" = "androidex" ] || [ "$GIT" = "sm64pc/sm64ex" ] || [ "$GIT" = "render96/render96ex" ] || [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
 		bluecho Applying menu arrows...
 		cd "$BASEPATH"/"$PRESET"
@@ -724,7 +716,7 @@ if [ ! -d "$SMLINUX" ]; then
 fi
 touch "$SMLINUX"/.config2
 echo '# PRESET supports: sm64pc sm64-port sm64nx sm64ex sm64ex-coop cheaterex
-# ALSO render96ex r96alpha sm64dos sm64exweb androidex AND MORE IN FAQ!
+# ALSO render96ex r96tester sm64dos sm64exweb androidex AND MORE IN FAQ!
 PRESET=cheaterex
 InstallHD=1
 MODELPACK=0
@@ -792,8 +784,8 @@ ANDROID=0
 MODELPACK=0
 DISCORD_SDK=1
 HIGHFPS=0
-CHEATER=0
-DYNOS=0
+CHEATER=1
+DYNOS=1
 GIT=sm64pc/sm64ex
 BRANCH=master
 if [ -f "$SMLINUX"/smlinuxcfg.txt ]; then
@@ -807,6 +799,8 @@ if [ -z $PRESET ] && [ ! -z $REPO ]; then
 	PRESET="$REPO"
 elif [ -z $PRESET ]; then
 	PRESET=sm64-"$BRANCH"
+elif [ "$PRESET" = "r96alpha" ]; then
+	PRESET=render96ex
 elif [ "$PRESET" = "UserDefined" ]; then
 	PRESET=userdef-"$BRANCH"
 fi
@@ -855,8 +849,8 @@ elif [ "$PRESET" = "sm64nx" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]'
 	HIGHFPS=0
 	CHEATER=0
 	DYNOS=0
-elif [ "$PRESET" = "render96ex" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "render96ex" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "render96" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "r96ex" ]; then
-	PRESET=render96ex
+elif [ "$PRESET" = "r96master" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "r96master" ]; then
+	PRESET=r96master
 	GIT=render96/render96ex
 	BRANCH=master
 	TEXTSAVES=1
@@ -867,25 +861,19 @@ elif [ "$PRESET" = "r96proto" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:
 	BRANCH=fastbuild_prototype
 	TEXTSAVES=1
 	DISCORDRPC=0
-	CHEATER=0
-	DYNOS=0
 elif [ "$PRESET" = "r96tester" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "r96tester" ]; then
 	PRESET=r96tester
 	GIT=render96/render96ex
 	BRANCH=tester
 	TEXTSAVES=1
 	DISCORDRPC=0
-	CHEATER=0
-	DYNOS=0
-elif [ "$PRESET" = "r96alpha" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "r96alpha" ]; then
-	PRESET=r96alpha
+elif [ "$PRESET" = "render96ex" ] || [ "$PRESET" = "r96alpha" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "render96ex" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "render96" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "r96ex" ]; then
+	PRESET=render96ex
 	GIT=render96/render96ex
 	BRANCH=alpha
 	TEXTSAVES=1
 	DISCORDRPC=0
 	EXTERNAL_DATA=1
-	CHEATER=0
-	DYNOS=0
 elif [ "$PRESET" = "cheaterex" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "cheaterex" ]; then
 	PRESET=cheaterex
 	GIT=s4Ys369/cheaterex
@@ -1167,15 +1155,24 @@ else
 		echo "Render 96 SGI model pack found, skipping model application."
 	elif [ "$EXTERNAL_DATA" = 1 ] && [ "$MODELPACK" = 1 ]; then
 		dosgi
-	elif [ ! "$TARGET" = "dos" ]; then
-		cd "$BASEPATH"/"$PRESET"
-		if [ ! -d actors.bak ]; then
-			cp -r actors actors.bak
+	fi
+	if [ ! "$TARGET" = "dos" ]; then
+		if [ ! -d "$SMLINUX"/models ]; then
+			mkdir "$SMLINUX"/models
 		fi
+		if [ ! -f "$SMLINUX"/models/Old_School_HD_Mario_Model.zip ]; then
+			echo Downloading Old School HD Mario Model...
+			wget -q https://cdn.discordapp.com/attachments/716459185230970880/719758031990030427/Old_School_HD_Mario_Model.zip -P "$SMLINUX"/models
+		fi
+		if [ ! -f "$SMLINUX"/models/hd_bowser.rar ]; then
+			echo Downloading HD Bowser...
+			wget -q https://cdn.discordapp.com/attachments/716459185230970880/718990046442684456/hd_bowser.rar -P "$SMLINUX"/models
+		fi
+		cd "$BASEPATH"/"$PRESET"
 		if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
 			echo HD Mario zipfile found, skipping application.
 		elif [ "$GIT" = "djoslin0/sm64ex-coop" ];  then
-			wget -q https://cdn.discordapp.com/attachments/716459185230970880/719758031990030427/Old_School_HD_Mario_Model.zip -P enhancements
+			ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
 			bluecho Applying HD Mario...
 			unzip -qo enhancements/Old_School_HD_Mario_Model.zip "actors/mario/*"
 			# Mario Include - thx filip
@@ -1184,15 +1181,16 @@ else
 				sed -i.bak '/#endif/i \
 #include "mario/geo_header.h"' actors/group0.h
     		fi
-    	else
-			wget -q https://cdn.discordapp.com/attachments/716459185230970880/719758031990030427/Old_School_HD_Mario_Model.zip -P enhancements
+    	elif [ "$DYNOS" = 0 ] || [ "$PRESET" = "r96master" ] || [ "$BITS" = 32 ]; then
+
+    		ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
 			bluecho Applying HD Mario...
 			unzip -oq enhancements/Old_School_HD_Mario_Model
 		fi
 		if [ -f "$BASEPATH"/"$PRESET"/enhancements/hd_bowser.rar ];  then
 			echo HD Bowser rarfile found, skipping application.
-		else
-			wget -q https://cdn.discordapp.com/attachments/716459185230970880/718990046442684456/hd_bowser.rar -P enhancements
+		elif [ "$DYNOS" = 0 ] || [ "$PRESET" = "r96master" ] || [ "$BITS" = 32 ]; then
+			ln -s "$SMLINUX"/models/hd_bowser.rar  enhancements
 			bluecho Applying HD Bowser...
 			if command -v unrar &> /dev/null; then
 				unrar x -o+ -idq enhancements/hd_bowser
@@ -1210,7 +1208,7 @@ else
 			wget -q https://cdn.discordapp.com/attachments/716459185230970880/718674249631662120/3d_coin_v2.patch -P enhancements
 		elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
 			wget -q https://cdn.discordapp.com/attachments/710311726708686900/814441166879195146/3d_coin_v2_nightly_coop.patch -P enhancements
-		elif [ "$ANDROID" = 0 ]; then
+		elif [ "$ANDROID" = 0 ] && [ ! "$GIT" = "render96/render96ex" ]; then
 			wget -q https://cdn.discordapp.com/attachments/721806706547490868/725041183700680807/3d_coin_v2_nightly.patch -P enhancements
 		fi
 		if [ -f "$BASEPATH"/"$PRESET"/enhancements/3d_coin_v2*.patch ]; then
@@ -1288,7 +1286,7 @@ dofps(){
 cd "$BASEPATH"/"$PRESET"
 if [ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master " ]; then
 	if [ "$HIGHFPS" = 1 ]; then
-		echo This repository supports 60fps build option so skipping patch application...
+		echo This repository supports 60fps build option so skipping patch application.
 	fi
 elif [ "$HIGHFPS" = 1 ] && [ -f enhancements/60fps ]; then
 	echo smlinux already applied 60fps patch, skipping reapplication...
@@ -1318,26 +1316,14 @@ if  [ "$TARGET_WEB" = 1 ] || ([ "$EXTERNAL_DATA" = 0 ] && [ ! "$PRESET" = "sm64n
 fi
 	cd "$BASEPATH"/"$PRESET"
 if  [ -d build/"$VERSION"_"$TARGET"/romfs/"Render 96" ] || [ -f enhancements/Render96_* ] || [ -f enhancements/RENDER96_* ] || [ -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ]; then
-	echo Render 96 SGI Models have already been applied.
+	echo Render 96 SGI Models have already been directly applied to target repository.
 	return
 fi
 if [ ! -d "$SMLINUX"/SGI ]; then
 	mkdir "$SMLINUX"/SGI
 fi
-cd "$BASEPATH"/"$PRESET"
-if [ -f enhancements/3d_coin*.patch ] && [ ! "$GIT" = "s4Ys369/cheaterex" ] && [ ! "$GIT" = "djoslin0/sm64ex-coop" ]; then
-	bluecho Removing 3D coins...
-	git apply -R --whitespace=nowarn enhancements/3d_coin*.patch
-	rm enhancements/3d_coin*.patch
-elif [ "$GIT" = "s4Ys369/cheaterex" ] && [ -f enhancements/captain_toad_stars*.patch ]; then
-	bluecho Removing Captain Toad Stars...
-	git apply -R --whitespace=nowarn enhancements/captain_toad_stars*.patch
-	rm enhancements/captain_toad_stars*.patch
-else
-	removecheater
-fi
-
 if [ "$PRESET" = "sm64nx" ]; then
+	SGIFILE=NONE
 	bluecho Starting Render96 Texture Pak Download...
 	mkdir "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/"Render96 Textures"
 	cd "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/"Render96 Textures"
@@ -1358,13 +1344,18 @@ if [ "$PRESET" = "sm64nx" ]; then
 		cd "SGI Models"
 		wget -q https://sm64pc.info/downloads/sgi13_fixed.pak &
 	fi
-elif [ "$PRESET" = "r96alpha" ] || [ "$PRESET" = "r96proto" ] || [ "$PRESET" = "r96tester" ]; then
-	SGIFILE=Render96_v2.1_Updated_Goddard.7z
-	if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
-		bluecho Downloading "$SGIFILE"...
-		wget -q https://cdn.discordapp.com/attachments/730551213376143431/800692030354489344/Render96_v2.1_Updated_Goddard.7z -P "$SMLINUX"/SGI
+elif [ "$DYNOS" = 1 ] && [ ! "$PRESET" = "r96master" ] && ( [ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "sm64ex" ] ); then
+	SGIFILE=DYNOS
+	if [ -d "$SMLINUX"/SGI/modelpack ]; then
+		bluecho Starting Render 96 Model Pack Update from github...
+		cd "$SMLINUX"/SGI/modelpack
+		git pull &
+	else
+		cd "$SMLINUX"/SGI
+		bluecho Starting Render 96 Model Pack Download from github...
+		git clone git://github.com/render96/modelpack &
 	fi
-elif [ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "r96droid" ]; then
+elif [ "PRESET" = "r96master" ] || [ "$PRESET" = "r96droid" ]; then
 	SGIFILE=RENDER96_V1.4.2_Luigi.zip
 	if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
 		bluecho Downloading "$SGIFILE"...
@@ -1383,29 +1374,35 @@ else
 		wget -q https://cdn.discordapp.com/attachments/727722992137666573/745038574918828112/RENDER96_V1.3.7z -O "$SMLINUX"/SGI/RENDER96_V1.3.zip
 	fi
 fi
-if [ -d "$BASEPATH"/"$PRESET"/actors.bak ] && [ ! "$SGIFILE" = "render96_coop.zip" ]; then
-	echo Restoring default actors...
-	cd "$BASEPATH"/"$PRESET"/enhancements
-	rm -rf "$BASEPATH"/"$PRESET"/actors
-	mv "$BASEPATH"/"$PRESET"/actors.bak "$BASEPATH"/"$PRESET"/actors
-	rm hd_bowser.rar Old_School_HD_Mario_Model.zip
-elif [ -d "$BASEPATH"/"$PRESET"/actors.bak ] && [ "$SGIFILE" = "render96_coop.zip" ]; then
-	echo Restoring default actors and keeping backup...
-	cd "$BASEPATH"/"$PRESET"/enhancements
-	rm -rf "$BASEPATH"/"$PRESET"/actors
-	cp -r "$BASEPATH"/"$PRESET"/actors.bak "$BASEPATH"/"$PRESET"/actors
-	rm hd_bowser.rar
-elif [ "$SGIFILE" = "render96_coop.zip" ]; then
-	echo Saving original actors folder as actors.bak
+
+if [ ! "$SGIFILE" = "DYNOS" ] && [ ! "$PRESET" = "sm64nx" ]; then
 	cd "$BASEPATH"/"$PRESET"
-	cp -rn actors actors.bak
-fi
-cd "$BASEPATH"/"$PRESET"
-if [ ! "$PRESET" = "sm64nx" ]; then
-	ln -s "$SMLINUX"/SGI/"$SGIFILE" "$BASEPATH"/"$PRESET"/enhancements
+	if [ -f enhancements/3d_coin*.patch ] && [ ! "$GIT" = "s4Ys369/cheaterex" ] && [ ! "$GIT" = "djoslin0/sm64ex-coop" ]; then
+		bluecho Removing 3D coins...
+		git apply -R --whitespace=nowarn enhancements/3d_coin*.patch
+		rm enhancements/3d_coin*.patch
+	elif [ "$GIT" = "s4Ys369/cheaterex" ] && [ -f enhancements/captain_toad_stars*.patch ]; then
+		bluecho Removing Captain Toad Stars...
+		git apply -R --whitespace=nowarn enhancements/captain_toad_stars*.patch
+		rm enhancements/captain_toad_stars*.patch
+	else
+		removecheater
+		cd "$BASEPATH"/"$PRESET"
+	fi
+	echo Restoring default actors in preperation for overwrite...
+	rm -rf actors
+	git checkout actors
+	if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
+		rm enhancements/Old_School_HD_Mario_Model.zip
+	fi
+	if [ -f enhancements/hd_bowser.rar ]; then
+		rm /enhancements/hd_bowser.rar
+	fi
+	ln -s "$SMLINUX"/SGI/"$SGIFILE" "$BASEPATH"/"$PRESET"/enhancements/
 	bluecho Applying "$SGIFILE"...
 	7z x -aoa enhancements/"$SGIFILE" >/dev/null
 fi
+
 if [ DOGS = CATS ] && [ ! "$ANDROID" = 0 ] && [ -f "$BASEPATH"/"$PRESET"/enhancements/render96_android.patch ]; then
 	echo Applying Android patch for Render96 models... # this patch is failing why bother
 	git apply --whitespace=nowarn enhancements/render96_android.patch
@@ -1525,16 +1522,17 @@ fi
 dodynos(){
 # must be called before docheats
 cd "$BASEPATH"/"$PRESET"
-if [ "$GIT" = "s4Ys369/cheaterex" ]; then
-	echo The Dynamic Options System is included with cheaterex, skipping patch.
-	return
+if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] ); then
+		echo The Dynamic Options System is included with "$PRESET", skipping patch.
+		return
 elif [ ! "$VERSION" = "us" ]; then
 	echo The Dynamic Options System is only supported with US ROM, skipping patch.
+	return
 elif [ "$DYNOS" = 0 ]; then
 	removedynos
 elif [ -f enhancements/DynOS.0.6.patch ]; then
 	echo DynOS 0.6 patchtfile already present, skipping application.
-elif [ "$PRESET" = "r96alpha" ] || [ "$BITS" = 32 ]; then
+elif [ "$PRESET" = "r96master" ] || [ "$BITS" = 32 ]; then
 	if [ -f enhancements/DynOS.0.5.patch ]; then
 		echo DynOS 0.5 patchtfile already present, skipping application.
 	else
@@ -1571,10 +1569,52 @@ if [ -f "$SAVEDIR"/DynOSconfig.cfg ]; then
 fi
 }
 
+dynosmodels(){
+if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old/dynos/packs ]; then
+	cp -r "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs/* "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs
+fi
+if [ -d "$SMLINUX"/models ]; then
+	cd "$SMLINUX"/models
+	if [ -f "actors" ]; then
+		mv actors actors.bak
+	fi
+	if [ ! -d "HD Bowser" ] && [ -f hd_bowser.rar ]; then
+		echo Extracting HD Bowser...
+		if command -v unrar &> /dev/null; then
+			unrar x -o+ -idq hd_bowser.rar
+		elif command -v unar &> /dev/null; then
+			unar -f -q hd_bowser.rar
+		elif ! 7z x -aoa hd_bowser.rar; then
+			redecho ERROR: Could not extract HD Bowser. Please install unrar, unar, or p7zip-rar.
+		fi
+		if [ -d "actors" ]; then
+			mv actors "HD Bowser"
+		fi
+	fi
+	if [ ! -d "Old School HD Mario" ] && [ -f "Old_School_HD_Mario_Model.zip" ]; then
+		echo Extracting Old School HD Mario Model...
+		unzip -oq Old_School_HD_Mario_Model
+		mv actors "Old School HD Mario"
+	fi
+fi
+if [ -d "$SMLINUX"/SGI/modelpack/Render96 ] && [ ! -f "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs/Render96 ]; then
+	bluecho Linking Render96 Models to Dynamic Options Model Loader...
+	ln -s "$SMLINUX"/SGI/modelpack/Render96 "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs/
+fi
+if [ -d "$SMLINUX"/models/"Old School HD Mario" ] && [ ! -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs/"Old School HD Mario" ]; then
+	bluecho Linking Old School HD Mario to Dynamic Options Model Loader...
+	ln -s "$SMLINUX"/models/"Old School HD Mario" "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs/
+fi
+if [ -d "$SMLINUX"/models/"HD Bowser" ] && [ ! -f "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs/"HD Bowser" ]; then
+	bluecho Linking HD Bowser to Dynamic Options Model Loader...
+	ln -s "$SMLINUX"/models/"HD Bowser" "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs/
+fi
+}
+
 docheats(){
 cd "$BASEPATH"/"$PRESET"/enhancements
-if [ "$GIT" = "s4Ys369/cheaterex" ]; then
-	echo CHEATER cheats are included with cheaterex, skipping patch.
+if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] ); then
+	echo CHEATER cheats are included with "$PRESET" so skipping patch.
 	return
 elif [ "$CHEATER" = 0 ]; then
 	removecheater
@@ -1600,17 +1640,7 @@ elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
 		ZIPFILE=CHEATER.coop.v3.patch.zip
 		CHEATERFILE=CHEATER.coop.v3.patch
 	fi
-elif [ "$DYNOS" = 1 ] && [ "$PRESET" = "r96alpha" ]; then
-	if [ -f v11.6.alpha_switch.hotfix.zip ]; then
-		echo CHEATER 11.5 already present, skipping application.
-	else
-		removecheater
-		wget -q https://cdn.discordapp.com/attachments/716459185230970880/796250394791378954/v11.6.alpha_switch.hotfix.zip
-		# wget -q https://cdn.discordapp.com/attachments/716459185230970880/783167761164795914/CHEATERv11.5.alpha.zip
-		ZIPFILE=v11.6.alpha_switch.hotfix.zip
-		CHEATERFILE=v11.6.alpha.patch
-	fi
-elif [ "$DYNOS" = 1 ] && [ "$BITS" = 64 ] && ([ "$PRESET" = "sm64ex" ] || [ "$PRESET" = "render96ex" ]); then
+elif [ "$DYNOS" = 1 ] && [ "$BITS" = 64 ] && ([ "$PRESET" = "sm64ex" ] || [ "$PRESET" = "r96master" ]); then
 	if [ -f CHEATERv11.5.ex.zip ]; then
 		echo CHEATER 11.5 already present, skipping application.
 	else
@@ -1619,8 +1649,8 @@ elif [ "$DYNOS" = 1 ] && [ "$BITS" = 64 ] && ([ "$PRESET" = "sm64ex" ] || [ "$PR
 		ZIPFILE=CHEATERv11.5.ex.zip
 		CHEATERFILE=v11.5.ex.patch
 	fi
-elif [ "$GIT" = "sm64pc/sm64ex" ] || [ "$GIT" = "render96/render96ex" ]; then
-	if [ "$DYNOS" = 1 ] && [ -f CHEATERv10_dynos.patch ] && [ ! "$PRESET" = "r96alpha" ]; then
+elif [ "$GIT" = "sm64pc/sm64ex" ] || [ "$PRESET" = "r96master" ]; then
+	if [ "$DYNOS" = 1 ] && [ -f CHEATERv10_dynos.patch ]; then
 		echo CHEATER 10 patchfile already present, skipping application.
 	elif [ "$DYNOS" = 0 ] && [ -f CHEATERv10.patch ]; then
 		echo CHEATER 10 patchfile already present, skipping application.
@@ -1649,7 +1679,7 @@ fi
 
 removecheater(){
 cd "$BASEPATH"/"$PRESET"
-if [ "$GIT" = "s4Ys369/cheaterex" ]; then
+if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex"] && [ ! "$PRESET" = "master" ]); then
 	echo Skipping CHEATER patch for "$GIT".
 	return
 elif [ -f enhancements/CHEATER*.patch ]; then
@@ -1971,6 +2001,7 @@ compactbutton=blue,black   # ok button'
 if [ ! -f "$SMLINUX"/.config2 ] && [ -f "$SMLINUX"/smlinuxcfg.txt ]; then
 	updateconfig
 fi
+
 if [ ! -f ~/.smlinuxUpdate ]; then
 	if [ "$COMMAND" = "config" ]; then
 		doconfig
@@ -1997,6 +2028,28 @@ if [ ! -f ~/.smlinuxUpdate ]; then
 	fi
 else
 	loadconfig "$COMMAND" "$2" "$3" "$4" "$5" "$6"
+fi
+if [ -d "$BASEPATH"/r96alpha ]; then
+	pinkecho r96alpha preset has been deprecated.  Use the render96ex prest for the alpha branch.
+	pinkecho "If you wish to build render96ex's master branch, use the new r96master preset."
+	echo Smlinux created folders and shortcuts are being updated...
+	if [ -d "$BASEPATH"/render96ex ]; then
+		mv "$BASEPATH"/render96ex "$BASEPATH"/r96master
+		realpreset="$PRESET"
+		PRESET=r96master
+		makedesktop
+		PRESET="$realpreset"
+	fi
+	mv "$BASEPATH"/r96alpha "$BASEPATH"/render96ex
+	if [ "$SHARE"/icons/r96alpha.* ]; then
+		mv "$SHARE"/icons/r96alpha.* mv "$SHARE"/icons/render96ex.*
+	fi
+	if [ -f "$SHARE"/applications/r96alpha.desktop ]; then
+		rm "$SHARE"/applications/r96alpha.desktop
+	fi
+	if [ -f ${XDG_DESKTOP_DIR:-$HOME/Desktop}/r96alpha.desktop ]; then
+		rm ${XDG_DESKTOP_DIR:-$HOME/Desktop}/r96alpha.desktop
+	fi
 fi
 SAVEDIR="$SHARE"/"$PRESET"
 if [ "$COMMAND" = "smconfig" ] && [ -f "$SAVEDIR"/sm64config.txt ] ; then
@@ -2030,7 +2083,7 @@ fi
 
 if [ "$COMMAND" = "purge" ]; then
 	redecho Wiping folder, backup, savedir, icon, and shortcuts...
-	for preset in sm64ex sm64nx sm64ex-coop render96ex cheaterex sm64dos sm64-portweb sm64exweb sm64-port-android-base androidex sm64pc sm64-port r96proto r96alpha emm-ody coop-unstable userdef-*
+	for preset in sm64ex sm64nx sm64ex-coop render96ex cheaterex sm64dos sm64-portweb sm64exweb sm64-port-android-base androidex sm64pc sm64-port r96proto r96alpha r96master r96tester emm-ody coop-unstable userdef-*
 do
 	printf $preset
 	if [ -d "$BASEPATH"/$preset ]; then
@@ -2435,7 +2488,7 @@ elif [ "$COMMAND" = "update" ]; then
 	if [ "$InstallHD" = 1 ]; then
 		dohd
 	elif [ "$MODELPACK" = 1 ]; then
-		pinkecho Warning: MODELPACK selected without InstallHD.
+		pinkecho Warning: MODELPACK selected without InstallHD.  This works fine, just FYI.
 		dosgi
 	else
 		pinkecho NOTE: InstallHD=0 so HD add-ons will not be applied or updated.
@@ -2467,6 +2520,9 @@ if [ "$COMMAND" = "update" ]|| [ "$COMMAND" = "rebuild" ]; then
 			mv "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"
 		fi
 		endnow
+	fi
+	if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs ]; then
+		dynosmodels
 	fi
 	if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old/res ] && [ "$ANDROID" = 0 ]; then
 		greenecho [6] Restoring External Resources...
@@ -2543,8 +2599,8 @@ if [ -d "$BASEPATH"/"$PRESET" ]; then
 			mkdir "$BASEPATH"/"$PRESET"
 			cd "$BASEPATH"/"$PRESET"
 			cp -r "$BASEPATH"/"$PRESET".old/.git .
-			git checkout "$BRANCH" -- .
 			git reset --quiet --hard
+			git checkout "$BRANCH" -- .
 			git pull --no-rebase
 		fi
 		if [ ! -f Makefile ] || [ ! -d .git ]; then
@@ -2723,6 +2779,9 @@ elif [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old/romfs ]; then
 	mv -n "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old/* "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"
 	rm -rf "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old
 fi
+if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs ]; then
+	dynosmodels
+fi
 bluecho Build Succesful!
 if [ "$TARGET" = "pc" ] && [ "$ANDROID" = 0 ]; then
 	greenecho [7] Checking shortcuts...
@@ -2748,7 +2807,6 @@ if [ -f "$HOME"/.smlinuxNopath ]; then
 	echo
 	for i in {1..30}
 do
-	# tput setab 0  # black background
 	tput setaf 1  # red text
 	tput bold
 	printf "Please close this terminal.  "

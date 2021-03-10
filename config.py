@@ -103,7 +103,7 @@ class ConfigWindow(QMainWindow):
 		# as seen in the config file. This is what you edit to add more settings.
 		# Check the comment for "ConfigSetting()" to see the arguments.
 		self.configDict = {
-			"PRESET": ConfigSetting("Preset", "dropdown", dropdownOptions = [ "UserDefined", "sm64pc", "sm64-port", "sm64-portweb", "sm64dos", "sm64nx", "sm64ex", "sm64exweb", "sm64ex-coop", "androidex", "cheaterex", "render96ex","r96proto","r96alpha", "r96tester", "sm64-port-android-base"],tooltip="Unless Userdefined, overrides settings including GIT and BRANCH (see FAQ)."),
+			"PRESET": ConfigSetting("Preset", "dropdown", dropdownOptions = [ "UserDefined", "sm64pc", "sm64-port", "sm64-portweb", "sm64dos", "sm64nx", "sm64ex", "sm64exweb", "sm64ex-coop", "androidex", "cheaterex", "render96ex","r96proto","r96master", "r96tester", "sm64-port-android-base"],tooltip="Unless Userdefined, overrides settings including GIT and BRANCH (see FAQ)."),
 			"VERSION": ConfigSetting("ROM VERSION", "dropdown", tooltip = "Must correspond to ROM region", dropdownOptions = ["us","jp","eu"]),
 			"RENDER_API": ConfigSetting("RENDER_API", "dropdown", tooltip = "Linux and macOS support GL (OpenGL 2.1+) or GL_LEGACY (OpenGL 1.1+).\nD3D11 (DirectX 11) is also offered for Windows.\n(sm64ex-based repos only)", dropdownOptions = ["GL","GL_LEGACY","D3D11"]),
 			"SDL_API": ConfigSetting("SDL API", "dropdown", tooltip = "CONTROLLER_API AUDIO_API Support SDL2 or SDL 1.2 (sm64ex-based repos only)", dropdownOptions = ["SDL2","SDL1"]),
@@ -111,16 +111,16 @@ class ConfigWindow(QMainWindow):
 			"BASEPATH": ConfigSetting("Base Folder", "line", tooltip = "Must be valid existing path.\nFolders for each repo cloned will be placed there."),
 			"InstallHD": ConfigSetting("Install HD Add-ons", "check", tooltip = "Install HD Add-ons when applicable including\nHD Mario & Bowser Models, 3D Coins,\nUpscaled Textures & High Quality Sounds - see FAQ"),
 			"MODELPACK": ConfigSetting("Install R96 MODELPACK", "check", tooltip = "Install Render 96 SGI Model Pack\n(sm64ex-based repos only)"),
-			"DYNOS": ConfigSetting("DYNOS", "check", tooltip = "Add additional options menu with Dynamic Option System by PeachyPeach\n(sm64ex-based repos only, included with r96alpha)"),
-			"CHEATER": ConfigSetting("CHEATER", "check", tooltip = "Add additional cheat options with CHEATER by s4ys\n(sm64ex-based repos only)"),
-			"HIGHFPS": ConfigSetting("HIGHFPS", "check", tooltip="enable HIGHFPS (r96alpha) or use repository provided 60fps patch"),
+			"DYNOS": ConfigSetting("DYNOS", "check", tooltip = "Add additional options menu with Dynamic Option System by PeachyPeach\n(sm64ex-based repos only)\n(cannot be disabled in render96ex)"),
+			"CHEATER": ConfigSetting("CHEATER", "check", tooltip = "Add additional cheat options with CHEATER by s4ys\n(sm64ex-based repos only)\n(cannot be disabled in render96ex)"),
+			"HIGHFPS": ConfigSetting("HIGHFPS", "check", tooltip="enable HIGHFPS (render96ex) or use repository provided 60fps patch"),
 
-			"NODRAWINGDISTANCE": ConfigSetting("NODRAWINGDISTANCE", "check", tooltip = "Don't hide faraway objects\n(sm64ex-based repos only)"),
-			"EXTERNAL_DATA": ConfigSetting("EXTERNAL_DATA", "check", tooltip = "Allow add-on texture and soundpacks\n(sm64ex-based repos only)"),
-			"BETTERCAMERA": ConfigSetting("BETTERCAMERA", "check", tooltip = "Adds Camera Settings to options menu\n(sm64ex-based repos only)"),
+			"NODRAWINGDISTANCE": ConfigSetting("NODRAWINGDISTANCE", "check", tooltip = "Don't hide faraway objects\n(sm64ex-based repos only)\n(render96ex includes in game slider control)"),
+			"EXTERNAL_DATA": ConfigSetting("EXTERNAL_DATA", "check", tooltip = "Allow add-on texture and soundpacks\n(sm64ex-based repos only)\n(cannot be disabled in render96ex)"),
+			"BETTERCAMERA": ConfigSetting("BETTERCAMERA", "check", tooltip = "Adds Camera Settings to options menu\n(sm64ex-based repos only)\n(cannot be disabled in render96ex)"),
 			"TEXTURE_FIX": ConfigSetting("TEXTURE_FIX", "check", tooltip = "Fix minor details like smoke texture\n(sm64ex-based repos only)"),
 			"DISCORDRPC": ConfigSetting("DISCORDRPC", "check", tooltip = "Enable Discord Rich Presence\n(64-bit sm64ex-based repos only)"),
-			"TEXTSAVES": ConfigSetting("TEXTSAVES", "check", tooltip = "Save player data as a text file instead of binary rom format\n(sm64ex-based repos only)"),
+			"TEXTSAVES": ConfigSetting("TEXTSAVES", "check", tooltip = "Save player data as a text file instead of binary rom format\n(sm64ex-based repos only)\n(cannot be disabled in render96ex)"),
 			"DEBUG": ConfigSetting("DEBUG", "check", tooltip = "Advanced Build Option"),
 			"TARGET_WEB": ConfigSetting("TARGET_WEB", "check", tooltip = "Build Web Version with emsdk"),
 			"TARGET_RPI": ConfigSetting("TARGET_RPI", "check", tooltip = "Build Raspberry Pi version on Rapsberry Pi"),
