@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-03-09-2248
+TIMESTAMP=2021-03-10-1336
 
 STARTSEC=$SECONDS
 
@@ -2042,7 +2042,7 @@ if [ -d "$BASEPATH"/r96alpha ]; then
 	fi
 	mv "$BASEPATH"/r96alpha "$BASEPATH"/render96ex
 	if [ "$SHARE"/icons/r96alpha.* ]; then
-		mv "$SHARE"/icons/r96alpha.* mv "$SHARE"/icons/render96ex.*
+		mv "$SHARE"/icons/r96alpha.* "$SHARE"/icons/render96ex.*
 	fi
 	if [ -f "$SHARE"/applications/r96alpha.desktop ]; then
 		rm "$SHARE"/applications/r96alpha.desktop
