@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-03-10-1336
+TIMESTAMP=2021-03-11-1925
 
 STARTSEC=$SECONDS
 
@@ -1200,6 +1200,11 @@ else
 				redecho ERROR: Could not extract HD Bowser. Please install unrar, unar, or p7zip-rar.
 			fi
 		fi
+		if [ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] && [ -d "$SMLINUX"/SGI/modelpack/Goddard/src/goddard ] && [ -f "$BASEPATH"/"$PRESET"/enhancements/hdgoddard ]; then
+			echo "Applying HD Mario Intro (goddard)..."
+			cp -r "$SMLINUX"/SGI/modelpack/Goddard/* "$BASEPATH"/"$PRESET"
+			touch "$BASEPATH"/"$PRESET"/enhancements/hdgoddard
+		fi
 	fi
 	if [ -f "$BASEPATH"/"$PRESET"/enhancements/3d_coin_v2*.patch ]; then
 		echo 3D coin V2 patchfile found, skipping application.
@@ -1246,7 +1251,7 @@ else
 		if [ ! -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ] && [ ! -f "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ]; then
 			if ([ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "r96droid" ]) && [ ! -d RENDER96-HD-TEXTURE-PACK ]; then
 				bluecho Starting Render96 Texture Download...
-				git clone --single-branch git://github.com/pokeheadroom/RENDER96-HD-TEXTURE-PACK &disown
+				git clone --quiet --single-branch git://github.com/pokeheadroom/RENDER96-HD-TEXTURE-PACK &disown
 				bgdl=r96 # background download in progress
 			elif [ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "r96droid" ]; then
 				bluecho Starting Render96 Textures Update...
@@ -1256,7 +1261,7 @@ else
 				ln -s "$SMLINUX"/RENDER96-HD-TEXTURE-PACK/gfx "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx
 			elif [ ! -d "$SMLINUX"/Cleaner-Aesthetics ]; then
 				bluecho Starting Cleaner Aesthetics Texture Download...
-				git clone --single-branch git://github.com/CrashCrod/Cleaner-Aesthetics &disown
+				git clone --quiet --single-branch git://github.com/CrashCrod/Cleaner-Aesthetics &disown
 				bgdl=ca # background download in progress
 			else
 				bluecho Starting Cleaner Aesthetic texture update...
@@ -1344,16 +1349,27 @@ if [ "$PRESET" = "sm64nx" ]; then
 		cd "SGI Models"
 		wget -q https://sm64pc.info/downloads/sgi13_fixed.pak &
 	fi
-elif [ "$DYNOS" = 1 ] && [ ! "$PRESET" = "r96master" ] && ( [ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "sm64ex" ] ); then
+elif ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || ([ "$PRESET" = "sm64ex" ] && [ "$DYNOS" = 1 ]); then
 	SGIFILE=DYNOS
+	cd "$SMLINUX"/SGI
 	if [ -d "$SMLINUX"/SGI/modelpack ]; then
 		bluecho Starting Render 96 Model Pack Update from github...
-		cd "$SMLINUX"/SGI/modelpack
-		git pull &
-	else
-		cd "$SMLINUX"/SGI
+		cd modelpack
+		if [ "$DYNOS" = 1 ]; then
+			git pull --quiet &
+		else
+			git pull
+			echo Applying current Render96 modelpack directly over "$PRESET" source...
+			cp -r Render96/* "$BASEPATH"/"$PRESET"/actors
+		fi
+	elif [ "$DYNOS" = 1 ]; then
 		bluecho Starting Render 96 Model Pack Download from github...
-		git clone git://github.com/render96/modelpack &
+		git clone --quiet git://github.com/render96/modelpack &
+	else # render96ex with dynos disabled
+		bluecho Downloading Render 96 Model Pack Download from github...
+		git clone git://github.com/render96/modelpack
+		echo Applying Latest Render96 modelpack...
+		cp -r modelpack/Render96/* "$BASEPATH"/"$PRESET"/actors/
 	fi
 elif [ "PRESET" = "r96master" ] || [ "$PRESET" = "r96droid" ]; then
 	SGIFILE=RENDER96_V1.4.2_Luigi.zip
@@ -1523,7 +1539,11 @@ dodynos(){
 # must be called before docheats
 cd "$BASEPATH"/"$PRESET"
 if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] ); then
-		echo The Dynamic Options System is included with "$PRESET", skipping patch.
+		if [ "$DYNOS" = 1 ]; then
+			echo The Dynamic Options System is included in "$PRESET" so skipping patch.
+		elif [ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] && [ "$MODELPACK" = 1 ]; then
+			echo Dynamic Options cannot be disabled for this branch, but models were applied directly.
+		fi
 		return
 elif [ ! "$VERSION" = "us" ]; then
 	echo The Dynamic Options System is only supported with US ROM, skipping patch.
@@ -1614,7 +1634,11 @@ fi
 docheats(){
 cd "$BASEPATH"/"$PRESET"/enhancements
 if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] ); then
-	echo CHEATER cheats are included with "$PRESET" so skipping patch.
+	if [ "$CHEATER" = 1 ] ; then
+		echo CHEATER cheats are included with "$PRESET" so skipping patch.
+	elif  [ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] ; then
+		echo CHEATER cheats are preincluded and cannot be removed from this branch.
+	fi
 	return
 elif [ "$CHEATER" = 0 ]; then
 	removecheater
@@ -1679,7 +1703,7 @@ fi
 
 removecheater(){
 cd "$BASEPATH"/"$PRESET"
-if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex"] && [ ! "$PRESET" = "master" ]); then
+if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "master" ]); then
 	echo Skipping CHEATER patch for "$GIT".
 	return
 elif [ -f enhancements/CHEATER*.patch ]; then
@@ -2472,8 +2496,6 @@ elif [ "$COMMAND" = "update" ]; then
 			echo Menu Arrows...
 			git apply enhancements/menu-arrows.patch
 		fi
-	else
-		echo "$GIT" is up to date.
 	fi
 	if [ ! "$ANDROID" = 0 ]; then
 		git submodule init
@@ -2487,9 +2509,6 @@ elif [ "$COMMAND" = "update" ]; then
 	greenecho [4] Applying pre-build modifications...
 	if [ "$InstallHD" = 1 ]; then
 		dohd
-	elif [ "$MODELPACK" = 1 ]; then
-		pinkecho Warning: MODELPACK selected without InstallHD.  This works fine, just FYI.
-		dosgi
 	else
 		pinkecho NOTE: InstallHD=0 so HD add-ons will not be applied or updated.
 		pinkecho NOTE: InstallHD=0 does not remove addons applied before update.
