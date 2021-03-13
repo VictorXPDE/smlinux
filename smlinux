@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-03-11-1925
+TIMESTAMP=2021-03-13-0954
 
 STARTSEC=$SECONDS
 
@@ -529,7 +529,7 @@ exit
 
 endnow(){
 redecho smlinux ending incomplete after $(($SECONDS - STARTSEC)) seconds.  "Contact #help-desk for support."
-if [ "$TARGET_RPI" = 0 ] && [ ! "$MAXJOBS" = 1 ] && [ ! OP1="--noweb" ]; then
+if [ "$TARGET_RPI" = 0 ] && [ ! "$MAXJOBS" = 1 ] && [ ! "$OP1" = "--noweb" ]; then
 	exec 2> >(grep -v Gtk >&2) # Supress GTK Warnings
 	"$OPEN" https://discord.gg/Ub6YHRm &
 fi
