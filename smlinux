@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-03-13-0954
+TIMESTAMP=2021-03-13-2012
 
 STARTSEC=$SECONDS
 
@@ -204,23 +204,19 @@ else
 do
 	if [ ! `echo $PATH | grep "$HOME"/"$folder"` = "" ]; then
 		PATHDIR="$HOME"/"$folder"
-		if [ ! -d "$PATHDIR" ]; then
-			if ! mkdir "$PATHDIR"; then
-				if [ "$folder" = "Applications/bin"] || [ "$folder" = "Applications/.bin"]; then
-					mkdir "$HOME"/Applications
-					mkdir "$PATHDIR"
-				else
-					mkdir "$HOME"/.local
-					if ! mkdir "$PATHDIR"; then
-						mkdir "$HOME"/.local/share
-						mkdir "$PATHDIR"
-					fi
-				fi
+		if [ ! -d "$PATHDIR" ] && ! mkdir "$PATHDIR"; then
+			if [ "$folder" = "Applications/bin"] || [ "$folder" = "Applications/.bin"]; then
+				mkdir "$HOME"/Applications
+				mkdir "$PATHDIR"
+			else
+				mkdir "$HOME"/.local/share
+				mkdir "$PATHDIR"
 			fi
 		fi
 		return
 	fi
 done
+	# This only happens if above didnt find a folder and return
 	if [ ! -d "$HOME"/bin ]; then
 		mkdir "$HOME"/bin
 	fi
@@ -769,25 +765,7 @@ FLAGS=""' >"$SMLINUX"/smlinuxcfg.txt
 }
 
 loadconfig(){
-BuildMusic=1
-TARGET_RPI=0
-TEXTSAVES=0
-TOUCH_CONTROLS=1
-LEGACY_RES=0
-BASEPATH=$HOME
-ARMONLY=1
-DEBUG=0
-IMMEDIATELOAD=1
-DOS_GL=osmesa
-ENABLE_OPENGL_LEGACY=1
 ANDROID=0
-MODELPACK=0
-DISCORD_SDK=1
-HIGHFPS=0
-CHEATER=1
-DYNOS=1
-GIT=sm64pc/sm64ex
-BRANCH=master
 if [ -f "$SMLINUX"/smlinuxcfg.txt ]; then
 	source "$SMLINUX"/smlinuxcfg.txt
 else
@@ -2106,7 +2084,7 @@ if [ -f "$BASEPATH"/sm64nx/build/"$VERSION"_"$TARGET"/keyboard1.bindings.json ] 
 fi
 
 if [ "$COMMAND" = "purge" ]; then
-	redecho Wiping folder, backup, savedir, icon, and shortcuts...
+	redecho Wiping smlinux data, sm64 repositories, sm64 savedirs, icons, and shortcuts...
 	for preset in sm64ex sm64nx sm64ex-coop render96ex cheaterex sm64dos sm64-portweb sm64exweb sm64-port-android-base androidex sm64pc sm64-port r96proto r96alpha r96master r96tester emm-ody coop-unstable userdef-*
 do
 	printf $preset
@@ -2155,7 +2133,7 @@ done
 		rm -rf "$BASEPATH"/emsdk
 	fi
 	rm -rf "$SMLINUX"
-	echo Done. You must delete "$PATHDIR"/smlinux manually for complete removal.
+	echo Done. You must remove "$PATHDIR"/smlinux manually for complete removal.
 	echo Note this did not remove dependencies installed with your package manager.
 	exit
 fi
