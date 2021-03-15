@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1202
+TIMESTAMP=2021-0315-1224
 
 STARTSEC=$SECONDS
 
@@ -2250,6 +2250,7 @@ else   # The real start, the rest was script preperation and setup.
 			pinkecho For command to install reccommended packages for other distros see smlinux FAQ.
 		fi
 		if [ ! -f "$SMLINUX"/config.py ]; then
+			echo Getting python config GUI...
 			wget -q https://raw.githubusercontent.com/enigma9o7/smlinux/master/config.py -P "$SMLINUX"
 		fi
 		if [ "$OSX_BUILD" = 1 ]; then
