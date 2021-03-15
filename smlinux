@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1604
+TIMESTAMP=2021-0315-1609
 
 STARTSEC=$SECONDS
 
@@ -1485,6 +1485,7 @@ if [ ! -f ~/.smlinuxUpdate ]; then
 						break
 					fi
 				done
+				fi
 				if [ -z "$PATHDIR" ]; then
 					PATHDIR=$HOME/bin
 					if [ ! -d "$PATHDIR" ]; then
