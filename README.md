@@ -1,5 +1,6 @@
 #  smlinux -Super Mario Linux- Install Build Update Script
 [<strong>Click here to jump to Frequently Asked Questions</strong>](#frequently-asked-questions)  
+[<strong>Click here to jump to Download and Installation Instructions</strong>](#download-and-installation-instructions)  
 <img src=https://github.com/enigma9o7/smlinux/raw/screenshot/MarioPC-small.png> 
 ## **What does smlinux do?**
 #
@@ -14,7 +15,7 @@
 
 ...and! you can use it again later to quickly rebuild and sync to the latest updates from github.
 <img src=https://github.com/enigma9o7/smlinux/raw/screenshot/screenshot1.png> 
-## **Download & Installation Instructions**    
+## **Download and Installation Instructions**    
 
 Paste either of the following into a terminal then press Enter/Return (*whichever works for your OS*):  
   
@@ -87,7 +88,7 @@ On the sm64nx fork, Arredondo's HD Mario & Bowser and Cleaner Aesthetics texture
 
 ## **What does the MODELPACK option do?**
 
-For the render96ex preset, this will apply Render96's SGI model pack version 1.42.  On sm64ex-coop a co-op specific version that includes Luigi is applied, while for sm64ex based forks, version 1.3 is applied.    For r96alpha and r96proto presets, version 2.1 is applied.
+For render96ex, this will download Render96's latest SGI model pack from github.  If DYNOS=1 it will be added to dynos modelpack menu, otherwise it will be directly applied.  On sm64ex-coop a co-op specific version that includes Luigi is applied, while for sm64ex based forks, version 1.3 is applied - unless you enable dynos, in which case last version from github will be added for the Dynos Model Loader.    For the r96master preset, version 1.42 is directly applied. 
 
 For sm64nx, this option will add paks for Render96's SGI Models (version 1.3) and Render96's HD textures and set them as defaults.  Be aware this model pak for sm64nx has minor visual problems and is no longer mainained, but can easily be reverted to default or HD models with the in-game mod menu that *only* sm64nx offers.
 
@@ -288,7 +289,7 @@ This erases files and folders created by smlinux including source repositories, 
 ## **How do I tell smlinux to download sm64 repositories to a folder other than home?**
 
 	
-Set `BASEPATH` to any existing directory that you have permission to write to, for example `BASEPATH=~/mario`.
+Set `BASEPATH` to any existing directory that you have permission to write to, for example `BASEPATH=$HOME/mario`.
 
 	mkdir ~/mario
 	smlinux config
