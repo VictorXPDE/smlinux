@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1550
+TIMESTAMP=2021-0315-1557
 
 STARTSEC=$SECONDS
 
@@ -2098,7 +2098,7 @@ fi
 
 if [ "$COMMAND" = "purge" ]; then
 	redecho Wiping smlinux data, sm64 repositories, sm64 savedirs, icons, and shortcuts...
-	for preset in sm64ex sm64nx sm64ex-coop render96ex cheaterex sm64dos sm64-portweb sm64exweb sm64-port-android-base androidex sm64pc sm64-port r96proto r96alpha r96master r96tester emm-ody coop-unstable userdef-*
+	for preset in sm64pc sm64-port sm64ex sm64nx sm64ex-coop cheaterex render96ex r96proto r96alpha r96master r96tester sm64dos sm64-portweb sm64exweb sm64-port-android-base androidex emm-ody coop-unstable userdef-*
 do
 	printf $preset
 	if [ -d "$BASEPATH"/$preset ]; then
@@ -2133,20 +2133,21 @@ do
 		rm "$USERPROFILE"'/Desktop/Super Mario 64 ('"$preset"')'.url
 	fi
 done
-	printf "."
+	printf ".djgpp."
 	if [ -d "$BASEPATH"/djgpp ]; then
 		rm -rf "$BASEPATH"/djgpp
 	fi
-	printf "."
+	printf ".android-sdk."
 	if [ -d "$BASEPATH"/android-sdk ]; then
 		rm -rf "$BASEPATH"/android-sdk
 	fi
-	printf "."
+	printf ".emsdk."
 	if [ -d "$BASEPATH"/emsdk ]; then
 		rm -rf "$BASEPATH"/emsdk
 	fi
+	printf ".smlinux."
 	rm -rf "$SMLINUX"
-	echo Done. You must remove "$PATHDIR"/smlinux manually for complete removal.
+	printf "\nDone.\nYou must remove "$PATHDIR"/smlinux manually for complete removal."
 	echo Note this did not remove dependencies installed with your package manager.
 	exit
 fi
