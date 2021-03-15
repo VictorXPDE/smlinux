@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-03-13-2012
+TIMESTAMP=2021-0315-1119
 
 STARTSEC=$SECONDS
 
@@ -2611,14 +2611,14 @@ fi
 if [ ! -d "$BASEPATH"/"$PRESET" ]; then
 	cd "$BASEPATH"
 	if [ ! "$ANDROID" = 0 ]; then
-		greenecho "[3] Downloading sm64 Android source from "$GIT" repository..."
+		greenecho "[3] Downloading sm64 Android source from $GIT repository..."
 		git clone git://github.com/"$GIT" -b "$BRANCH" "$ANDROID"
 		cd "$ANDROID"
 		git submodule init
 		git submodule update
 		./getSDL.sh
 	else
-		greenecho "[3] Downloading sm64 source from "$GIT" repository... "
+		greenecho "[3] Downloading sm64 source from $GIT repository..."
 		git clone git://github.com/"$GIT" -b "$BRANCH" "$PRESET"
 	fi
 fi
