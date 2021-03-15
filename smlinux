@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1609
+TIMESTAMP=2021-0315-1625
 
 STARTSEC=$SECONDS
 
@@ -1249,9 +1249,9 @@ else
 				ln -s "$SMLINUX"/Cleaner-Aesthetics/gfx "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx
 			fi
 		fi
-		if [ ! -f "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/hq_sounds_v5.1.zip ] && [ ! "$GIT" = "djoslin0/sm64ex-coop" ] && [ "$BITS" = 64 ]; then
+		if [ ! -f "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/hq_sounds_v5.1.zip ] && [ "$BITS" = 64 ] && ([ "$BRANCH" = "master" ] || [ "$BRANCH" = "nightly" ]); then
 			if [ ! -f "$SMLINUX"/hq_sounds_v5.1.zip ]; then
-				bluecho Getting High Quality Sounds...
+				bluecho Starting High Quality Sound Download...
 				wget -q https://github.com/MapAnon/sm64-pc-hq-sounds/releases/download/5.1/hq_sounds_v5.1.zip -P "$SMLINUX" &
 			fi
 			ln -s "$SMLINUX"/hq_sounds_v5.1.zip "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/hq_sounds_v5.1.zip
