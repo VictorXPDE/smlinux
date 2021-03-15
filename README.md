@@ -3,7 +3,6 @@
 [<strong>Click here to jump to Download and Installation Instructions</strong>](#download-and-installation-instructions)  
 <img src=https://github.com/enigma9o7/smlinux/raw/screenshot/MarioPC-small.png> 
 ## **What does smlinux do?**
-#
 1. Installs Required Packages (build tools & other dependencies)
 2. Installs latest version of itself to users path 
 3. Clones (downloads) sm64 source repository from Github
