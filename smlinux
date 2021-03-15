@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1119
+TIMESTAMP=2021-0315-1154
 
 STARTSEC=$SECONDS
 
@@ -2252,14 +2252,16 @@ else   # The real start, the rest was script preperation and setup.
 		if [ ! -f "$SMLINUX"/config.py ]; then
 			wget -q https://raw.githubusercontent.com/enigma9o7/smlinux/master/config.py -P "$SMLINUX"
 		fi
-		if [ ! "$MSYS" = 1 ]; then
+		if [ "$OSX_BUILD" = 1 ]; then
 			python3 -m pip install --upgrade pip
 			python3 -m pip install numpy
-			if [ ! "OSX_BUILD" = 1 ] && ! command -v apt &> /dev/null; then
+		elif[ ! "$MSYS" = 1 ]; then
+			sudo python3 -m pip install --upgrade pip
+			sudo python3 -m pip install numpy
+			if ! command -v apt &> /dev/null; then
 				python3 -m pip install PyQt5
-			fi
-			if [ "`pip3 list --format=columns | grep numpy`" = "" ] && command -v pip &> /dev/null; then
-				pip install numpy # this worked on ubuntu 16
+			elif [ "`pip3 list --format=columns | grep numpy`" = "" ] && command -v pip &> /dev/null; then
+				sudo pip install numpy # this worked on ubuntu 16
 			fi
 		fi
 	elif ! command -v gcc &> /dev/null; then
@@ -2282,7 +2284,7 @@ else   # The real start, the rest was script preperation and setup.
 	fi
 	if [ "$PRESET" = "sm64nx" ] && ([ ! -d "$BASEPATH"/"$PRESET/build" ] || [ "$COMMAND" = "depends" ]); then
 		bluecho "Installing required build tools for sm64nx..."
-		python3 -m pip install pillow zstandard tqdm xxhash
+		sudo python3 -m pip install pillow zstandard tqdm xxhash
 		gcccheck
 	elif [ ! "$ANDROID" = 0 ]; then
 		bluecho "Loading Android SDK..."
