@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1224
+TIMESTAMP=2021-0315-1245
 
 STARTSEC=$SECONDS
 
@@ -19,12 +19,11 @@ if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET" ] && [ ! "$COMMAND" = "
 	mv "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET" "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old
 fi
 #Here We go & music to build to
-if command -v mplayer &> /dev/null && [ "$BuildMusic" = 1 ] && [ ! "$MAXJOBS" = 1 ] && [ -f "$SMLINUX"/File_Select_64_slowed_down.mp3 ]; then
-	if [ -f "$BASEPATH"/"$PRESET"/sound/samples/sfx_mario/0C.aiff ]; then
-		sh -c 'mplayer -nolirc -really-quiet '"$BASEPATH"/"$PRESET"'/sound/samples/sfx_mario/0C.aiff;mplayer -nolirc -really-quiet -volume 40 -loop 0 '"$SMLINUX"'/File_Select_64_slowed_down.mp3&'
-	elif [ -f "$BASEPATH"/sm64ex/sound/samples/sfx_mario/0C.aiff ]; then
-		sh -c 'mplayer -nolirc -really-quiet '"$BASEPATH"'/sm64ex/sound/samples/sfx_mario/0C.aiff;mplayer -nolirc -really-quiet -volume 40 -loop 0 '"$SMLINUX"'/File_Select_64_slowed_down.mp3&'
-	else
+if command -v mplayer &> /dev/null; then
+	if [ -f "$SMLINUX"/"$VERSION"/sound/samples/sfx_mario/0C.aiff ]; then
+		sh -c 'mplayer -nolirc -really-quiet '"$SMLINUX"/"$VERSION"'/sound/samples/sfx_mario/0C.aiff'
+	fi
+	if [ "$BuildMusic" = 1 ] && [ ! "$MAXJOBS" = 1 ] && [ -f "$SMLINUX"/File_Select_64_slowed_down.mp3 ]; then
 		sh -c 'mplayer -nolirc -really-quiet -volume 40 -loop 0 '"$SMLINUX"'/File_Select_64_slowed_down.mp3&'
 	fi
 fi
@@ -1036,7 +1035,7 @@ fi
 loademsdk(){
 if [ ! -d "$BASEPATH"/emsdk ]; then
 	cd "$BASEPATH"
-	git clone git://github.com/emscripten-core/emsdk
+	git clone --progress git://github.com/emscripten-core/emsdk
 	cd emsdk
 	./emsdk install 1.39.5
 	./emsdk activate 1.39.5
@@ -1345,7 +1344,7 @@ elif ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || (
 		git clone --quiet git://github.com/render96/modelpack &
 	else # render96ex with dynos disabled
 		bluecho Downloading Render 96 Model Pack Download from github...
-		git clone git://github.com/render96/modelpack
+		git clone --progress git://github.com/render96/modelpack
 		echo Applying Latest Render96 modelpack...
 		cp -r modelpack/Render96/* "$BASEPATH"/"$PRESET"/actors/
 	fi
@@ -2615,14 +2614,14 @@ if [ ! -d "$BASEPATH"/"$PRESET" ]; then
 	cd "$BASEPATH"
 	if [ ! "$ANDROID" = 0 ]; then
 		greenecho "[3] Downloading sm64 Android source from $GIT repository..."
-		git clone git://github.com/"$GIT" -b "$BRANCH" "$ANDROID"
+		git clone --progress git://github.com/"$GIT" -b "$BRANCH" "$ANDROID"
 		cd "$ANDROID"
 		git submodule init
 		git submodule update
 		./getSDL.sh
 	else
 		greenecho "[3] Downloading sm64 source from $GIT repository..."
-		git clone git://github.com/"$GIT" -b "$BRANCH" "$PRESET"
+		git clone --progress git://github.com/"$GIT" -b "$BRANCH" "$PRESET"
 	fi
 fi
 if [ ! -d "$BASEPATH"/"$PRESET" ]; then
