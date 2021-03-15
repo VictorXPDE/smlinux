@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1557
+TIMESTAMP=2021-0315-1604
 
 STARTSEC=$SECONDS
 
@@ -985,6 +985,7 @@ if [ ! -d "$BASEPATH" ]; then
 	redecho ERROR: User Defined BASEPATH does not exist!  Setting BASEPATH="$HOME"
 	BASEPATH=$HOME
 fi
+SAVEDIR="$SHARE"/"$PRESET"
 }
 
 doconfig(){
@@ -2054,6 +2055,7 @@ if [ -d "$BASEPATH"/r96alpha ]; then
 		PRESET=r96master
 		makedesktop
 		PRESET="$realpreset"
+		SAVEDIR="$SHARE"/"$PRESET"
 	fi
 	mv "$BASEPATH"/r96alpha "$BASEPATH"/render96ex
 	if [ "$SHARE"/icons/r96alpha.* ]; then
@@ -2066,7 +2068,6 @@ if [ -d "$BASEPATH"/r96alpha ]; then
 		rm ${XDG_DESKTOP_DIR:-$HOME/Desktop}/r96alpha.desktop
 	fi
 fi
-SAVEDIR="$SHARE"/"$PRESET"
 if [ "$COMMAND" = "smconfig" ] && [ -f "$SAVEDIR"/sm64config.txt ] ; then
 	greenecho Editing "$SAVEDIR"/sm64config.txt with nano...
 	nano "$SAVEDIR"/sm64config.txt
