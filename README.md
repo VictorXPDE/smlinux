@@ -230,7 +230,7 @@ This works because when smlinux applies the 60fps patch it touches a file called
 *Developed under Bodhi 5.1 and tested on a Slax virtual machine so should work automatically on Ubuntu and Debian.  
 Arch Fedora OpenSuSE confirmed working by users. Please test and report other distributions!*
 
-Paste the command string recccommended below for your distribution directly into a terminal before running smlinux.  
+If you are not using debian/ubuntu/arch/msys/macos you must paste the command string recccommended below for your distribution directly into a terminal before running smlinux.  
 *If your distribution is missing or needs packages not listed here, please let me know their names so I can update.*
 
 **Fedora/Red Hat**
@@ -250,6 +250,8 @@ Paste the command string recccommended below for your distribution directly into
 	sudo apk add build-base python3 audiofile-dev sdl2-dev glew-dev zenity
 	
 Some build targets depend on additional packages, for example Android builds require `android-sdk`, DOS targets require `djgpp`, web targets emscripten, sm64nx requires `g++` version 8 or newer, and using `sdl1` requires additional libraries, all of which smlinux only installs when those targets are specified.  Users of operating systems without advanced package tool may need to install the appropriate GCC/SDL/SDK/JDK with appropriate package manager.  
+
+For macOS, Msys, and linux that uses apt or pacman, smlinux should install everything for you.
 
 **macOS** If smlinux detects `Darwin` the following packages are installed with `brew`:
 
