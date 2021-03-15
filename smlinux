@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1253
+TIMESTAMP=2021-0315-1550
 
 STARTSEC=$SECONDS
 
@@ -1405,6 +1405,7 @@ fi
 scriptUpdate(){
 if [ ! -f ~/.smlinuxUpdate ]; then
 	if [ ! -f "$PATHDIR"/smlinux ] || [ ! -d "$SMLINUX"/.git ] ; then
+		echo smlinux installation not found.  Downloading necessary files...
 		if [ "$USER" = "root" ]; then
 			redecho WARNING: smlinux being installed as root.
 			redecho smlinux updates may not work correctly if you run again as a regular user.
@@ -1415,13 +1416,13 @@ if [ ! -f ~/.smlinuxUpdate ]; then
 			fi
 			mv -f "$SMLINUX" "$SMLINUX".baq
 		fi
-		git clone --single-branch git://github.com/enigma9o7/smlinux.git "$SMLINUX"
+		git clone --progress --single-branch git://github.com/enigma9o7/smlinux.git "$SMLINUX"
 		if [ -d "$SMLINUX".baq ]; then
 			cp -rn "$SMLINUX".baq/* "$SMLINUX"/
 			rm -rf "$SMLINUX".baq
 		fi
 		if [ ! -d "$SMLINUX"/.git ] ; then
-			redecho ERROR: Cannot connect to github. Run without AutoUpdate enabled.
+			redecho ERROR: Cannot connect to github. Try running without AutoUpdate enabled.
 			endnow
 		else
 			touch "$SMLINUX"/.config2 # new install doesnt need update
@@ -1451,6 +1452,7 @@ if [ ! -f ~/.smlinuxUpdate ]; then
 		cd "$LAUNCH_DIR"
 		exec "$PATHDIR"/smlinux "$COMMAND" "$OP1" "$OP2" "$OP3" "$OP4"
 	else
+		echo smlinux installation found, checking for updates...
 		cd "$SMLINUX"
 		git fetch
 		if [ "$(git diff HEAD origin/HEAD -- smlinux)" != "" ]; then
@@ -1463,38 +1465,50 @@ if [ ! -f ~/.smlinuxUpdate ]; then
 				fi
 			else
 				echo 'SMLINUX=${XDG_DATA_HOME:-$HOME/.local/share}/smlinux
-				if [ `uname` = "Darwin" ] || [ `uname -o` = "Msys" ]; then
+				if [ "$OSX_BUILD" = 1 ] || [ "$MSYS" = 1 ]; then
 					PATHDIR=/usr/local/bin
 				else
 					for folder in bin .local/bin .local/share/bin Applications/bin Applications/.bin .bin .local/share/.bin .local/.bin
 				do
 					if [ ! `echo $PATH | grep "$HOME"/"$folder"` = "" ]; then
 						PATHDIR="$HOME"/"$folder"
+						if [ ! -d "$PATHDIR" ] && ! mkdir "$PATHDIR"; then
+							if [ "$folder" = "Applications/bin"] || [ "$folder" = "Applications/.bin"]; then
+								mkdir "$HOME"/Applications
+								mkdir "$PATHDIR"
+							else
+								mkdir "$HOME"/.local/share
+								mkdir "$PATHDIR"
+							fi
+						fi
 						break
 					fi
 				done
-				fi
 				if [ -z "$PATHDIR" ]; then
 					PATHDIR=$HOME/bin
-				fi
-				if [ ! -d "$PATHDIR" ]; then
-					mkdir "$PATHDIR"
+					if [ ! -d "$PATHDIR" ]; then
+						mkdir "$PATHDIR"
+					fi
+					export PATH=$HOME/bin:$PATH
+					PATH=$HOME/bin:$PATH
+					touch "$HOME"/.smlinuxNopath
+					if [ -f "$HOME"/.bashrc ]; then
+						bluecho Adding $HOME/bin to bash/zsh path...
+						echo 'export PATH=$HOME/bin:$PATH' >>~/.bashrc
+					fi
+					if [ -f "$HOME"/.zshrc ]; then
+						bluecho Adding $HOME/bin to zsh path...
+						echo 'export PATH=$HOME/bin:$PATH' >>~/.zshrc
+					fi
 				fi
 				if mapfile -t -d: <<<"$PATH" >/dev/null 2>&1 && [ -f "${MAPFILE[0]}"/smlinux ]; then # get rid of one in old path
 					rm "${MAPFILE[0]}"/smlinux
 				fi
 				mv -f "$SMLINUX"/smlinux "$PATHDIR"/
 				if [ ! -f "$PATHDIR"/smlinux ]; then
-					echo Warning: Could not write to first path directory.  Creating $HOME/bin.
-					touch "$HOME"/.smlinuxNopath
-					mkdir $HOME/bin
-					PATHDIR="$HOME"/bin
-					mv -f "$SMLINUX"/smlinux "$PATHDIR"/
-					if [ ! -f "$PATHDIR"/smlinux ]; then
-						echo ERROR - Could not write "$PATHDIR"/smlinux
-						echo Run again with AutoUpdate disabled.
-						exit
-					fi
+					echo ERROR - Could not write "$PATHDIR"/smlinux
+					echo Run again with AutoUpdate disabled.
+					exit
 				fi
 				chmod +x "$PATHDIR"/smlinux
 				exec "$PATHDIR"/smlinux "$@"' > ~/.smlinuxUpdate
@@ -2383,7 +2397,7 @@ else   # The real start, the rest was script preperation and setup.
 		redecho ERROR: Need valid Super Mario 64 romfile to proceed.
 		endnow
 	fi
-	greenecho [2] Checking smlinux github repository for updates....
+	greenecho [2] Checking smlinux installed version...
 	if [ "$AutoUpdate" = 1 ] || [ "$COMMAND" = "upgrade" ]; then
 		scriptUpdate "$COMMAND" "$2" "$3" "$4" "$5" "$6"
 	else
