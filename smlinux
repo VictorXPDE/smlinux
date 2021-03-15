@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1154
+TIMESTAMP=2021-0315-1202
 
 STARTSEC=$SECONDS
 
@@ -2255,7 +2255,7 @@ else   # The real start, the rest was script preperation and setup.
 		if [ "$OSX_BUILD" = 1 ]; then
 			python3 -m pip install --upgrade pip
 			python3 -m pip install numpy
-		elif[ ! "$MSYS" = 1 ]; then
+		elif [ ! "$MSYS" = 1 ]; then
 			sudo python3 -m pip install --upgrade pip
 			sudo python3 -m pip install numpy
 			if ! command -v apt &> /dev/null; then
