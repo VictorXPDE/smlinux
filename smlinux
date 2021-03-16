@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1625
+TIMESTAMP=2021-0315-1919
 
 STARTSEC=$SECONDS
 
@@ -2537,7 +2537,7 @@ if [ "$COMMAND" = "update" ]|| [ "$COMMAND" = "rebuild" ]; then
 		fi
 		endnow
 	fi
-	if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs ]; then
+	if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs ] || [ "$DYNOS" = 1 ]; then
 		dynosmodels
 	fi
 	if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old/res ] && [ "$ANDROID" = 0 ]; then
@@ -2795,7 +2795,7 @@ elif [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old/romfs ]; then
 	mv -n "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old/* "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"
 	rm -rf "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET".old
 fi
-if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs ]; then
+if [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/dynos/packs ] && [ "$DYNOS" = 1 ]; then
 	dynosmodels
 fi
 bluecho Build Succesful!
