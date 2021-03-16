@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1919
+TIMESTAMP=2021-0315-1943
 
 STARTSEC=$SECONDS
 
@@ -2052,6 +2052,7 @@ if [ -d "$BASEPATH"/r96alpha ]; then
 	echo Smlinux created folders and shortcuts are being updated...
 	if [ -d "$BASEPATH"/render96ex ]; then
 		mv "$BASEPATH"/render96ex "$BASEPATH"/r96master
+		mv "$SHARE"/"$PRESET"/render96ex "$SHARE"/"$PRESET"/r96master
 		realpreset="$PRESET"
 		PRESET=r96master
 		makedesktop
@@ -2059,6 +2060,7 @@ if [ -d "$BASEPATH"/r96alpha ]; then
 		SAVEDIR="$SHARE"/"$PRESET"
 	fi
 	mv "$BASEPATH"/r96alpha "$BASEPATH"/render96ex
+	mv "$SHARE"/"$PRESET"/r96alpha "$SHARE"/"$PRESET"/render96ex
 	if [ "$SHARE"/icons/r96alpha.* ]; then
 		mv "$SHARE"/icons/r96alpha.* "$SHARE"/icons/render96ex.*
 	fi
@@ -2400,7 +2402,7 @@ else   # The real start, the rest was script preperation and setup.
 		redecho ERROR: Need valid Super Mario 64 romfile to proceed.
 		endnow
 	fi
-	greenecho [2] Checking smlinux installed version...
+	greenecho [2] Verifying smlinux installation...
 	if [ "$AutoUpdate" = 1 ] || [ "$COMMAND" = "upgrade" ]; then
 		scriptUpdate "$COMMAND" "$2" "$3" "$4" "$5" "$6"
 	else
@@ -2685,7 +2687,7 @@ elif [ "$TARGET_WEB" = 0 ] && [ "$ANDROID" = 0 ]; then
 	if [ "$GIT" = "s4Ys369/cheaterex" ] && [ -f "$SAVEDIR"/sm64config.txt ]; then
 		mv "$SAVEDIR"/sm64config.txt "$SAVEDIR"/CHEATER64config.txt
 	fi
-	if [ "$PRESET" = "r96alpha" ]; then
+	if [ "$PRESET" = "render96ex" ]; then
 		echo Settings default game language to English.
 		if [ -f "$SAVEDIR"/sm64config.txt ]; then
 			sed -i.bak '/^language/d' "$SMLINUX"/smlinuxcfg.txt # delete line
@@ -2710,9 +2712,9 @@ elif [ "$GIT" = "sm64-port/sm64-port" ] && [ -f "$SHARE"/sm64nx/sm64.sav ]; then
 elif [ "$GIT" = "render96/render96ex" ] && [ -f "$SHARE"/render96ex/render96_save_file_0.sav ]; then
 	cp "$SHARE"/render96ex/render96_save_file_0.sav "$SAVEDIR"
 	echo Copied Save file from render96ex
-elif [ "$GIT" = "render96/render96ex" ] && [ -f "$SHARE"/r96alpha/render96_save_file_0.sav ]; then
-	cp "$SHARE"/r96alpha/render96_save_file_0.sav "$SAVEDIR"
-	echo Copied Save file from r96alpha
+elif [ "$GIT" = "render96/render96ex" ] && [ -f "$SHARE"/r96master/render96_save_file_0.sav ]; then
+	cp "$SHARE"/r96master/render96_save_file_0.sav "$SAVEDIR"
+	echo Copied Save file from r96master
 elif [ "$GIT" = "render96/render96ex" ] && [ -f "$SHARE"/r96proto/render96_save_file_0.sav ]; then
 	cp "$SHARE"/r96proto/render96_save_file_0.sav "$SAVEDIR"
 	echo Copied Save file from r96proto
