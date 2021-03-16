@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1943
+TIMESTAMP=2021-0315-1950
 
 STARTSEC=$SECONDS
 
@@ -2508,6 +2508,8 @@ elif [ "$COMMAND" = "update" ]; then
 	greenecho [4] Applying pre-build modifications...
 	if [ "$InstallHD" = 1 ]; then
 		dohd
+	elif [ "$MODELPACK" = 1 ]; then
+		dosgi
 	else
 		pinkecho NOTE: InstallHD=0 so HD add-ons will not be applied or updated.
 		pinkecho NOTE: InstallHD=0 does not remove addons applied before update.
