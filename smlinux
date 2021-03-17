@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0315-1950
+TIMESTAMP=2021-0316-1936
 
 STARTSEC=$SECONDS
 
@@ -851,6 +851,7 @@ elif [ "$PRESET" = "render96ex" ] || [ "$PRESET" = "r96alpha" ] || [ $(echo "$PR
 	TEXTSAVES=1
 	DISCORDRPC=0
 	EXTERNAL_DATA=1
+	DYNOS=1
 elif [ "$PRESET" = "cheaterex" ] || [ $(echo "$PRESET" | tr '[:upper:]' '[:lower:]') = "cheaterex" ]; then
 	PRESET=cheaterex
 	GIT=s4Ys369/cheaterex
@@ -1217,12 +1218,14 @@ else
 		elif [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ] && [ "$GIT" = "render96/render96ex" ]; then
 			bluecho Starting Render 96 texture update....
 			cd "$SMLINUX"/RENDER96-HD-TEXTURE-PACK
-			gitstash
+			git reset --quiet --hard
+			git checkout master -- .
 			git pull --quiet --no-rebase &
 		elif [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ]; then
 			bluecho Starting Cleaner Aesthetics textures update...
 			cd "$SMLINUX"/Cleaner-Aesthetics
-			gitstash
+			git reset --quiet --hard
+			git checkout master -- .
 			git pull --quiet --no-rebase &
 		fi
 		cd "$SMLINUX"
@@ -1234,7 +1237,8 @@ else
 			elif [ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "r96droid" ]; then
 				bluecho Starting Render96 Textures Update...
 				cd RENDER96-HD-TEXTURE-PACK
-				gitstash
+				git reset --quiet --hard
+				git checkout master -- .
 				git pull --quiet --no-rebase &
 				ln -s "$SMLINUX"/RENDER96-HD-TEXTURE-PACK/gfx "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx
 			elif [ ! -d "$SMLINUX"/Cleaner-Aesthetics ]; then
@@ -1244,7 +1248,8 @@ else
 			else
 				bluecho Starting Cleaner Aesthetic texture update...
 				cd Cleaner-Aesthetics
-				gitstash
+				git reset --quiet --hard
+				git checkout master -- .
 				git pull --quiet --no-rebase &
 				ln -s "$SMLINUX"/Cleaner-Aesthetics/gfx "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx
 			fi
@@ -1334,7 +1339,7 @@ elif ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || (
 		bluecho Starting Render 96 Model Pack Update from github...
 		cd modelpack
 		if [ "$DYNOS" = 1 ]; then
-			git pull --quiet &
+			git pull --quiet &disown
 		else
 			git pull
 			echo Applying current Render96 modelpack directly over "$PRESET" source...
@@ -1342,7 +1347,7 @@ elif ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || (
 		fi
 	elif [ "$DYNOS" = 1 ]; then
 		bluecho Starting Render 96 Model Pack Download from github...
-		git clone --quiet git://github.com/render96/modelpack &
+		git clone --quiet git://github.com/render96/modelpack &disown
 	else # render96ex with dynos disabled
 		bluecho Downloading Render 96 Model Pack Download from github...
 		git clone --progress git://github.com/render96/modelpack
