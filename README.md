@@ -46,7 +46,7 @@ sm64ex,r96ex,sm64ex-coop and cheaterex all confirmed working with Intel based ma
 For Android & DOS builds use WSL.  For native builds under Microsoft Windows, first install msys2 and run smlinux from the included mingw terminal. sm64nx builds are not working yet.  Because whiptail is not available for msys, smlinux will run in with no menus or prompts and config file will open automatically. 
 
 **32-bit notes:** 
-sm64nx and Discord Rich Presence are not suppored.
+sm64nx, Discord Rich Presence and Dynos Model Loader for sm64ex are not supported.
 
 # Frequently Asked Questions
 * [<strong>What does smlinux do?</strong>](#what-does-smlinux-do)
@@ -87,7 +87,7 @@ On the sm64nx fork, Arredondo's HD Mario & Bowser and Cleaner Aesthetics texture
 
 ## **What does the MODELPACK option do?**
 
-For render96ex, this will download Render96's latest SGI model pack from github.  If DYNOS=1 it will be added to dynos modelpack menu, otherwise it will be directly applied.  On sm64ex-coop a co-op specific version that includes Luigi is applied, while for sm64ex based forks, version 1.3 is applied - unless you enable dynos, in which case last version from github will be added for the Dynos Model Loader.    For the r96master preset, version 1.42 is directly applied. 
+For render96ex and sm64ex with a dynos model loader, this will download Render96's latest SGI models from github and add to dynos menu.   On sm64ex-coop a co-op specific version that includes Luigi is directly applied, while for sm64ex based forks, version 1.3 is directly applied - unless you enable dynos and installhd.  For the r96master preset, version 1.42 is directly applied. 
 
 For sm64nx, this option will add paks for Render96's SGI Models (version 1.3) and Render96's HD textures and set them as defaults.  Be aware this model pak for sm64nx has minor visual problems and is no longer mainained, but can easily be reverted to default or HD models with the in-game mod menu that *only* sm64nx offers.
 
