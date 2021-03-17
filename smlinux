@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0316-1936
+TIMESTAMP=2021-0316-2033
 
 STARTSEC=$SECONDS
 
@@ -1160,7 +1160,7 @@ else
 				sed -i.bak '/#endif/i \
 #include "mario/geo_header.h"' actors/group0.h
     		fi
-    	elif [ "$DYNOS" = 0 ] || [ "$PRESET" = "r96master" ] || [ "$BITS" = 32 ]; then
+    	elif [ "$DYNOS" = 0 ] || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ! ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = 1 ] && [ "$DYNOS" = 0 ]) || [ "$BITS" = 32 ]; then
 
     		ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
 			bluecho Applying HD Mario...
@@ -1168,7 +1168,7 @@ else
 		fi
 		if [ -f "$BASEPATH"/"$PRESET"/enhancements/hd_bowser.rar ];  then
 			echo HD Bowser rarfile found, skipping application.
-		elif [ "$DYNOS" = 0 ] || [ "$PRESET" = "r96master" ] || [ "$BITS" = 32 ]; then
+    	elif [ "$DYNOS" = 0 ] || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ! ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = 1 ] && [ "$DYNOS" = 0 ]) || [ "$BITS" = 32 ]; then
 			ln -s "$SMLINUX"/models/hd_bowser.rar  enhancements
 			bluecho Applying HD Bowser...
 			if command -v unrar &> /dev/null; then
@@ -1218,7 +1218,7 @@ else
 		elif [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ] && [ "$GIT" = "render96/render96ex" ]; then
 			bluecho Starting Render 96 texture update....
 			cd "$SMLINUX"/RENDER96-HD-TEXTURE-PACK
-			git reset --quiet --hard
+			git reset --quiet --hard HEAD~5
 			git checkout master -- .
 			git pull --quiet --no-rebase &
 		elif [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ]; then
@@ -1237,7 +1237,7 @@ else
 			elif [ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "r96droid" ]; then
 				bluecho Starting Render96 Textures Update...
 				cd RENDER96-HD-TEXTURE-PACK
-				git reset --quiet --hard
+				git reset --quiet --hard HEAD~5
 				git checkout master -- .
 				git pull --quiet --no-rebase &
 				ln -s "$SMLINUX"/RENDER96-HD-TEXTURE-PACK/gfx "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx
@@ -1395,7 +1395,7 @@ if [ ! "$SGIFILE" = "DYNOS" ] && [ ! "$PRESET" = "sm64nx" ]; then
 		rm enhancements/Old_School_HD_Mario_Model.zip
 	fi
 	if [ -f enhancements/hd_bowser.rar ]; then
-		rm /enhancements/hd_bowser.rar
+		rm  enhancements/hd_bowser.rar
 	fi
 	ln -s "$SMLINUX"/SGI/"$SGIFILE" "$BASEPATH"/"$PRESET"/enhancements/
 	bluecho Applying "$SGIFILE"...
@@ -2511,6 +2511,9 @@ elif [ "$COMMAND" = "update" ]; then
 		fi
 	fi
 	greenecho [4] Applying pre-build modifications...
+	dofps
+	dodynos
+	docheats
 	if [ "$InstallHD" = 1 ]; then
 		dohd
 	elif [ "$MODELPACK" = 1 ]; then
@@ -2524,10 +2527,7 @@ elif [ "$COMMAND" = "update" ]; then
 		cd "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res
 		zip -q0ur hdbase gfx
 	fi
-	dofps
-	dodynos
-	docheats
-	domymenu
+
 fi
 if [ "$COMMAND" = "update" ]|| [ "$COMMAND" = "rebuild" ]; then
 	greenecho [5] Recompiling "$GIT" "$BRANCH" from "$BASEPATH"/"$PRESET"
@@ -2758,6 +2758,9 @@ elif [ "$ANDROID" = 0 ] && [ "$TARGET_WEB" = 0 ]; then
 		mv "$SAVEDIR"/sm64_save_file.bin "$SAVEDIR"/CHEATER64_save_file.bin
 	fi
 fi
+dofps
+dodynos
+docheats
 if [ "$InstallHD" = 1 ]; then
 	dohd
 elif [ "$MODELPACK" = 1 ]; then
@@ -2766,10 +2769,6 @@ elif [ "$TARGET" = "pc" ]; then
 	pinkecho Warning: InstallHD=0 so HD add-ons will not be applied or updated.
 	pinkecho NOTE:    InstallHD=0 does not remove addons applied before update.
 fi
-dofps
-dodynos
-docheats
-domymenu
 if [ "$PRESET" = "emm-ody" ] && [ ! -f "$BASEPATH"/"$PRESET"smo.cappy_assets.zip ]; then
     echo Getting smo cappy assets...
     cd "$BASEPATH"/"$PRESET"
