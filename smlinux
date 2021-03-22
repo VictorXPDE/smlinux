@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0321-2229
+TIMESTAMP=2021-0321-2236
 
 STARTSEC=$SECONDS
 
@@ -1160,14 +1160,14 @@ else
 				sed -i.bak '/#endif/i \
 #include "mario/geo_header.h"' actors/group0.h
     		fi
-    	elif [ "$DYNOS" = 0 ] || [ "$BITS" = 32 ] || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ]); then
+    	elif [ "$DYNOS" = 0 ] || ([ "$BITS" = 32 ] && [ "$MODELPACK" = 0 ]) || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ] && [ "$BITS" = 32 ]); then
     		ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
 			bluecho Applying HD Mario...
 			unzip -oq enhancements/Old_School_HD_Mario_Model.zip
 		fi
 		if [ -f "$BASEPATH"/"$PRESET"/enhancements/hd_bowser.rar ];  then
 			echo HD Bowser rarfile found, skipping application.
-    	elif [ "$DYNOS" = 0 ] || [ "$BITS" = 32 ] || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ]); then
+    	elif [ "$DYNOS" = 0 ] || ([ "$BITS" = 32 ] && [ "$MODELPACK" = 0 ]) || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ] && [ "$BITS" = 64 ]); then
 			ln -s "$SMLINUX"/models/hd_bowser.rar  enhancements
 			bluecho Applying HD Bowser...
 			if command -v unrar &> /dev/null; then
