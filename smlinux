@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0321-2213
+TIMESTAMP=2021-0321-2219
 
 STARTSEC=$SECONDS
 
@@ -2057,7 +2057,7 @@ if [ -d "$BASEPATH"/r96alpha ]; then
 	echo Smlinux created folders and shortcuts are being updated...
 	if [ -d "$BASEPATH"/render96ex ]; then
 		mv "$BASEPATH"/render96ex "$BASEPATH"/r96master
-		mv "$SHARE"/"$PRESET"/render96ex "$SHARE"/"$PRESET"/r96master
+		mv "$SHARE"/render96ex "$SHARE"/r96master
 		realpreset="$PRESET"
 		PRESET=r96master
 		makedesktop
@@ -2065,7 +2065,7 @@ if [ -d "$BASEPATH"/r96alpha ]; then
 		SAVEDIR="$SHARE"/"$PRESET"
 	fi
 	mv "$BASEPATH"/r96alpha "$BASEPATH"/render96ex
-	mv "$SHARE"/"$PRESET"/r96alpha "$SHARE"/"$PRESET"/render96ex
+	mv "$SHARE"/r96alpha "$SHARE"/render96ex
 	if [ "$SHARE"/icons/r96alpha.* ]; then
 		mv "$SHARE"/icons/r96alpha.* "$SHARE"/icons/render96ex.*
 	fi
