@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0321-2236
+TIMESTAMP=2021-0321-2247
 
 STARTSEC=$SECONDS
 
@@ -1150,8 +1150,8 @@ else
 		cd "$BASEPATH"/"$PRESET"
 		if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
 			echo HD Mario zipfile found, skipping application.
-		elif [ "$GIT" = "djoslin0/sm64ex-coop" ];  then
-			ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
+		elif [ "$GIT" = "djoslin0/sm64ex-coop" ] && [ "$MODELPACK" = 0 ];  then
+			ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements/
 			bluecho Applying HD Mario...
 			unzip -qo enhancements/Old_School_HD_Mario_Model.zip "actors/mario/*"
 			# Mario Include - thx filip
@@ -1161,14 +1161,14 @@ else
 #include "mario/geo_header.h"' actors/group0.h
     		fi
     	elif [ "$DYNOS" = 0 ] || ([ "$BITS" = 32 ] && [ "$MODELPACK" = 0 ]) || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ] && [ "$BITS" = 32 ]); then
-    		ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
+    		ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements/
 			bluecho Applying HD Mario...
 			unzip -oq enhancements/Old_School_HD_Mario_Model.zip
 		fi
 		if [ -f "$BASEPATH"/"$PRESET"/enhancements/hd_bowser.rar ];  then
 			echo HD Bowser rarfile found, skipping application.
     	elif [ "$DYNOS" = 0 ] || ([ "$BITS" = 32 ] && [ "$MODELPACK" = 0 ]) || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ] && [ "$BITS" = 64 ]); then
-			ln -s "$SMLINUX"/models/hd_bowser.rar  enhancements
+			ln -s "$SMLINUX"/models/hd_bowser.rar  enhancements/
 			bluecho Applying HD Bowser...
 			if command -v unrar &> /dev/null; then
 				unrar x -o+ -idq enhancements/hd_bowser.rar
@@ -1332,7 +1332,7 @@ if [ "$PRESET" = "sm64nx" ]; then
 		wget -q https://sm64pc.info/downloads/sgi13_fixed.pak &
 	fi
 elif ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || ([ "$PRESET" = "sm64ex" ] && [ "$DYNOS" = 1 ]); then
-	SGIFILE=DYNOS
+	SGIFILE=GITHUB
 	cd "$SMLINUX"/SGI
 	if [ -d "$SMLINUX"/SGI/modelpack ]; then
 		bluecho Starting Render 96 Model Pack Update from github...
@@ -1373,7 +1373,7 @@ else
 	fi
 fi
 
-if [ ! "$SGIFILE" = "DYNOS" ] && [ ! "$PRESET" = "sm64nx" ]; then
+if [ ! "$SGIFILE" = "GITHUB" ] && [ ! "$PRESET" = "sm64nx" ]; then
 	cd "$BASEPATH"/"$PRESET"
 	if [ -f enhancements/3d_coin*.patch ] && [ ! "$GIT" = "s4Ys369/cheaterex" ] && [ ! "$GIT" = "djoslin0/sm64ex-coop" ]; then
 		bluecho Removing 3D coins...
