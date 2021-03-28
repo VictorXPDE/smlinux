@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0328-1414
+TIMESTAMP=2021-0328-1548
 
 STARTSEC=$SECONDS
 
@@ -1361,17 +1361,13 @@ else
 		echo MODELPACK=0 so not applying Render 96 models over sm64 repository.
 		return
 	elif [ "$PRESET" = "r96master" ] || [ "$PRESET" = "r96droid" ]; then
-		# SGIFILE=RENDER96_V1.4.2_Luigi.zip
-		#  SGIFILE=Render96_v1.4.2.7z
 		SGIFILE=Render96_Master_v1.4.2.7z
 		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
 			bluecho Downloading "$SGIFILE"...
-			# wget -q https://github.com/Render96/ModelPack/releases/download/1.4.2/Render96_v1.4.2.7z -P "$SMLINUX"/SGI
-			# wget -q https://cdn.discordapp.com/attachments/727722992137666573/768506877436755988/RENDER96_V1.4.2_Luigi.zip -P "$SMLINUX"/SGI
 			wget -q https://github.com/Render96/ModelPack/releases/download/1.4.2/Render96_Master_v1.4.2.7z -P "$SMLINUX"/SGI
 		fi
 	elif [ "$GIT" = "render96/render96ex" ]; then
-		SGIFILE=GITHUB
+		SGIFILE=R96MODELPACK
 	elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
 		SGIFILE=RENDER96_2.1_COOP.7z
 		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
@@ -1380,13 +1376,9 @@ else
 		fi
 	else
 		SGIFILE=Render96_Master_v1.3.7z
-		# new SGIFILE=Render96_v1.3.7z
-		# SGIFILE=RENDER96_V1.3.zip #old
 		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
 			bluecho Downloading Render 96 SGI Model Pack V1.3
 			wget -q https://github.com/Render96/ModelPack/releases/download/1.3/Render96_Master_v1.3.7z -P "$SMLINUX"/SGI
-			#wget -q https://github.com/Render96/ModelPack/releases/download/1.3/Render96_v1.3.7z -P "$SMLINUX"/SGI
-			#wget -q https://cdn.discordapp.com/attachments/727722992137666573/745038574918828112/RENDER96_V1.3.7z -O "$SMLINUX"/SGI/RENDER96_V1.3.zip
 		fi
 	fi
 	cd "$BASEPATH"/"$PRESET"
@@ -1399,8 +1391,8 @@ else
 		git apply -R --whitespace=nowarn enhancements/captain_toad_stars*.patch
 		rm enhancements/captain_toad_stars*.patch
 	fi
-	if  [ -f enhancements/Render96_* ] || [ -f enhancements/RENDER96_* ] || [ -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ]; then
-		echo Render 96 SGI Models have already been directly applied to target repository.
+	if  [ -f enhancements/"$SGIFILE" ]; then
+		echo "$SGIFILE" appears to have already been applied to target repository.
 		return
 	fi
 	if [ -f enhancements/Old_School_HD_Mario_Model.zip ] || [ -f enhancements/hd_bowser.rar ]; then
@@ -1414,10 +1406,10 @@ else
 			rm  enhancements/hd_bowser.rar
 		fi
 	fi
-	if [ "$SGIFILE" = "GITHUB" ]; then
+	if [ "$SGIFILE" = "R96MODELPACK" ]; then
 		echo Applying latest Render 96 models from modelpack repository...
 		cp -r "$SMLINUX"/SGI/modelpack/Render96/* actors
-		touch enhancements/Render96_v-git
+		touch enhancements/R96MODELPACK
 	else
 		ln -s "$SMLINUX"/SGI/"$SGIFILE" "$BASEPATH"/"$PRESET"/enhancements/
 		bluecho Applying "$SGIFILE"...
@@ -1598,11 +1590,16 @@ fi
 }
 
 removedynos(){
-# must be in PRESET folder
+# should be called from dodynos while in PRESET folder
 if [ -f enhancements/DynOS*.patch ]; then
 	bluecho Removing Dynamic Option System...
-	git apply -R --whitespace=nowarn enhancements/DynOS*.patch
-	rm enhancements/DynOS*.patch
+	if git apply -R --whitespace=nowarn enhancements/DynOS*.patch; then
+		rm enhancements/DynOS*.patch
+	elif [ -f enhancements/Render96_* ] || [ -f enhancements/RENDER96_* ]; then
+		redecho Could not remove dynos with SGI models on top.
+	else
+		redecho Could not remove dynamic options.
+	fi
 fi
 if [ -f "$SAVEDIR"/DynOSconfig.cfg ]; then
 	echo Resetting DynOS configuration...
@@ -2540,6 +2537,12 @@ elif [ "$COMMAND" = "update" ]; then
 	fi
 	greenecho [4] Applying pre-build modifications...
 	dofps
+	if [ "$DYNOS" = 0 ]; then
+		dodynos
+	fi
+	if [ "$CHEATER" = 0 ]; then
+		docheats
+	fi
 	if [ "$InstallHD" = 1 ]; then
 		dohd
 	elif [ "$MODELPACK" = 1 ]; then
@@ -2548,8 +2551,12 @@ elif [ "$COMMAND" = "update" ]; then
 		pinkecho NOTE: InstallHD=0 so HD add-ons will not be applied or updated.
 		pinkecho NOTE: InstallHD=0 does not remove addons applied before update.
 	fi
-	dodynos
-	docheats
+	if [ "$DYNOS" = 1 ]; then
+		dodynos
+	fi
+	if [ "$CHEATER" = 1 ]; then
+		docheats
+	fi
 	if [ ! "$ANDROID" = 0 ] && [ -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ]; then
 		echo Updating Android basepack...
 		cd "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res
