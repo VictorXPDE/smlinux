@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0327-1815
+TIMESTAMP=2021-0327-1827
 
 STARTSEC=$SECONDS
 
@@ -1335,7 +1335,7 @@ if [ "$PRESET" = "sm64nx" ]; then
 		fi
 	fi
 else
-	if ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || ([ "$PRESET" = "sm64ex" ] && [ "$DYNOS" = 1 ] && [ "$BITS" = 64] ); then
+	if ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || ([ "$PRESET" = "sm64ex" ] && [ "$DYNOS" = 1 ] && [ "$BITS" = 64 ]); then
 		cd "$SMLINUX"/SGI
 		if [ -d "$SMLINUX"/SGI/modelpack ]; then
 			bluecho Starting Render 96 Model Pack Update from github...
