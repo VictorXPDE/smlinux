@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0327-2114
+TIMESTAMP=2021-0328-1414
 
 STARTSEC=$SECONDS
 
@@ -1131,7 +1131,7 @@ if [ "$PRESET" = "sm64nx" ]; then
 	fi
 else
 	cd "$BASEPATH"/"$PRESET"
-	if  [ -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ] || [ -f enhancements/RENDER96_V* ] || [ -f enhancements/Render96_v* ]; then
+	if  [ -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ] || [ -f enhancements/RENDER96_V* ] || [ -f enhancements/Render96_* ]; then
 		echo "Render 96 SGI model pack found, skipping model application."
 	elif [ "$EXTERNAL_DATA" = 1 ] || [ "$DYNOS" = 1 ]; then
 		dosgi
@@ -1149,7 +1149,7 @@ else
 			echo Downloading HD Bowser...
 			wget -q https://cdn.discordapp.com/attachments/716459185230970880/718990046442684456/hd_bowser.rar -P "$SMLINUX"/models
 		fi
-		if [ ! -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ] && [ ! -f enhancements/RENDER96_V* ] && [ ! -f enhancements/Render96_v* ] && [ ! "$GIT" = "render96/render96ex" ]; then
+		if [ ! -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ] && [ ! -f enhancements/RENDER96_V* ] && [ ! -f enhancements/Render96_* ] && [ ! "$GIT" = "render96/render96ex" ]; then
 			if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
 				echo HD Mario zipfile found, skipping application.
 			elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
@@ -1361,12 +1361,14 @@ else
 		echo MODELPACK=0 so not applying Render 96 models over sm64 repository.
 		return
 	elif [ "$PRESET" = "r96master" ] || [ "$PRESET" = "r96droid" ]; then
-		SGIFILE=RENDER96_V1.4.2_Luigi.zip
+		# SGIFILE=RENDER96_V1.4.2_Luigi.zip
 		#  SGIFILE=Render96_v1.4.2.7z
+		SGIFILE=Render96_Master_v1.4.2.7z
 		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
 			bluecho Downloading "$SGIFILE"...
-			wget -q https://github.com/Render96/ModelPack/releases/download/1.4.2/Render96_v1.4.2.7z -P "$SMLINUX"/SGI
+			# wget -q https://github.com/Render96/ModelPack/releases/download/1.4.2/Render96_v1.4.2.7z -P "$SMLINUX"/SGI
 			# wget -q https://cdn.discordapp.com/attachments/727722992137666573/768506877436755988/RENDER96_V1.4.2_Luigi.zip -P "$SMLINUX"/SGI
+			wget -q https://github.com/Render96/ModelPack/releases/download/1.4.2/Render96_Master_v1.4.2.7z -P "$SMLINUX"/SGI
 		fi
 	elif [ "$GIT" = "render96/render96ex" ]; then
 		SGIFILE=GITHUB
@@ -1377,11 +1379,13 @@ else
 			wget -q https://cdn.discordapp.com/attachments/752628516075470998/795348384399097866/RENDER96_2.1_COOP.7z -P "$SMLINUX"/SGI
 		fi
 	else
+		SGIFILE=Render96_Master_v1.3.7z
 		# new SGIFILE=Render96_v1.3.7z
-		SGIFILE=RENDER96_V1.3.zip #old
+		# SGIFILE=RENDER96_V1.3.zip #old
 		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
 			bluecho Downloading Render 96 SGI Model Pack V1.3
-			wget -q https://github.com/Render96/ModelPack/releases/download/1.3/Render96_v1.3.7z -P "$SMLINUX"/SGI
+			wget -q https://github.com/Render96/ModelPack/releases/download/1.3/Render96_Master_v1.3.7z -P "$SMLINUX"/SGI
+			#wget -q https://github.com/Render96/ModelPack/releases/download/1.3/Render96_v1.3.7z -P "$SMLINUX"/SGI
 			#wget -q https://cdn.discordapp.com/attachments/727722992137666573/745038574918828112/RENDER96_V1.3.7z -O "$SMLINUX"/SGI/RENDER96_V1.3.zip
 		fi
 	fi
