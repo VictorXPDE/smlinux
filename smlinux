@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0321-2247
+TIMESTAMP=2021-0327-1815
 
 STARTSEC=$SECONDS
 
@@ -1130,10 +1130,12 @@ if [ "$PRESET" = "sm64nx" ]; then
 		dosgi
 	fi
 else
-	if  [ -f "$BASEPATH"/"$PRESET"/enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ] || [ -f "$BASEPATH"/"$PRESET"/enhancements/RENDER96_V* ]; then
+	cd "$BASEPATH"/"$PRESET"
+	if  [ -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ] || [ -f enhancements/RENDER96_V* ] || [ -f enhancements/Render96_v* ]; then
 		echo "Render 96 SGI model pack found, skipping model application."
-	elif [ "$EXTERNAL_DATA" = 1 ] && [ "$MODELPACK" = 1 ]; then
+	elif [ "$EXTERNAL_DATA" = 1 ] || [ "$DYNOS" = 1 ]; then
 		dosgi
+		cd "$BASEPATH"/"$PRESET"
 	fi
 	if [ ! "$TARGET" = "dos" ]; then
 		if [ ! -d "$SMLINUX"/models ]; then
@@ -1147,56 +1149,57 @@ else
 			echo Downloading HD Bowser...
 			wget -q https://cdn.discordapp.com/attachments/716459185230970880/718990046442684456/hd_bowser.rar -P "$SMLINUX"/models
 		fi
-		cd "$BASEPATH"/"$PRESET"
-		if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
-			echo HD Mario zipfile found, skipping application.
-		elif [ "$GIT" = "djoslin0/sm64ex-coop" ] && [ "$MODELPACK" = 0 ];  then
-			ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements/
-			bluecho Applying HD Mario...
-			unzip -qo enhancements/Old_School_HD_Mario_Model.zip "actors/mario/*"
-			# Mario Include - thx filip
-			if ! grep -q '#include "mario/geo_header.h"' actors/group0.h; then
-				echo updating actors/group0.h
-				sed -i.bak '/#endif/i \
+		if [ ! -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ] && [ ! -f enhancements/RENDER96_V* ] && [ ! -f enhancements/Render96_v* ] && [ ! "$GIT" = "render96/render96ex" ]; then
+			if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
+				echo HD Mario zipfile found, skipping application.
+			elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
+				ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
+				bluecho Applying HD Mario...
+				unzip -qo enhancements/Old_School_HD_Mario_Model.zip "actors/mario/*"
+				# Mario Include - thx filip
+				if ! grep -q '#include "mario/geo_header.h"' actors/group0.h; then
+					echo updating actors/group0.h
+					sed -i.bak '/#endif/i \
 #include "mario/geo_header.h"' actors/group0.h
-    		fi
-    	elif [ "$DYNOS" = 0 ] || ([ "$BITS" = 32 ] && [ "$MODELPACK" = 0 ]) || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ] && [ "$BITS" = 32 ]); then
-    		ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements/
-			bluecho Applying HD Mario...
-			unzip -oq enhancements/Old_School_HD_Mario_Model.zip
-		fi
-		if [ -f "$BASEPATH"/"$PRESET"/enhancements/hd_bowser.rar ];  then
-			echo HD Bowser rarfile found, skipping application.
-    	elif [ "$DYNOS" = 0 ] || ([ "$BITS" = 32 ] && [ "$MODELPACK" = 0 ]) || ([ "$PRESET" = "r96master" ] && [ "$MODELPACK" = 0 ]) || ([ "$GIT" = "sm64pc/sm64ex" ] && [ "$MODELPACK" = "$DYNOS" ] && [ "$BITS" = 64 ]); then
-			ln -s "$SMLINUX"/models/hd_bowser.rar  enhancements/
-			bluecho Applying HD Bowser...
-			if command -v unrar &> /dev/null; then
-				unrar x -o+ -idq enhancements/hd_bowser.rar
-			elif command -v unar &> /dev/null; then
-				unar -f -q enhancements/hd_bowser.rar
-			elif ! 7z x -aoa enhancements/hd_bowser.rar; then
-				redecho ERROR: Could not extract HD Bowser. Please install unrar, unar, or p7zip-rar.
+    			fi
+    		else
+    			ln -s "$SMLINUX"/models/Old_School_HD_Mario_Model.zip enhancements
+				bluecho Applying HD Mario...
+				unzip -oq enhancements/Old_School_HD_Mario_Model.zip
+			fi
+			if [ -f "$BASEPATH"/"$PRESET"/enhancements/hd_bowser.rar ]; then
+				echo HD Bowser rarfile found, skipping application.
+    		else
+    			ln -s "$SMLINUX"/models/hd_bowser.rar  enhancements/
+				bluecho Applying HD Bowser...
+				if command -v unrar &> /dev/null; then
+					unrar x -o+ -idq enhancements/hd_bowser.rar
+				elif command -v unar &> /dev/null; then
+					unar -f -q enhancements/hd_bowser.rar
+				elif ! 7z x -aoa enhancements/hd_bowser.rar; then
+					redecho ERROR: Could not extract HD Bowser. Please install unrar, unar, or p7zip-rar.
+				fi
+			fi
+			if [ -f "$BASEPATH"/"$PRESET"/enhancements/3d_coin_v2*.patch ]; then
+				echo 3D coin V2 patchfile found, skipping application.
+			else
+				if [ "$PRESET" = "sm64pc" ]; then
+					wget -q https://cdn.discordapp.com/attachments/716459185230970880/718674249631662120/3d_coin_v2.patch -P enhancements
+				elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
+					wget -q https://cdn.discordapp.com/attachments/710311726708686900/814441166879195146/3d_coin_v2_nightly_coop.patch -P enhancements
+				elif [ "$ANDROID" = 0 ] && [ ! "$GIT" = "render96/render96ex" ]; then
+					wget -q https://cdn.discordapp.com/attachments/721806706547490868/725041183700680807/3d_coin_v2_nightly.patch -P enhancements
+			fi
+				if [ -f "$BASEPATH"/"$PRESET"/enhancements/3d_coin_v2*.patch ]; then
+					bluecho Applying 3D Coin Patch...
+					git apply --whitespace=nowarn enhancements/3d_coin_v2*.patch
+				fi
 			fi
 		fi
 		if [ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] && [ -d "$SMLINUX"/SGI/modelpack/Goddard/src/goddard ] && [ -f "$BASEPATH"/"$PRESET"/enhancements/hdgoddard ]; then
 			echo "Applying HD Mario Intro (goddard)..."
 			cp -r "$SMLINUX"/SGI/modelpack/Goddard/* "$BASEPATH"/"$PRESET"
 			touch "$BASEPATH"/"$PRESET"/enhancements/hdgoddard
-		fi
-	fi
-	if [ -f "$BASEPATH"/"$PRESET"/enhancements/3d_coin_v2*.patch ]; then
-		echo 3D coin V2 patchfile found, skipping application.
-	else
-		if [ "$PRESET" = "sm64pc" ]; then
-			wget -q https://cdn.discordapp.com/attachments/716459185230970880/718674249631662120/3d_coin_v2.patch -P enhancements
-		elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
-			wget -q https://cdn.discordapp.com/attachments/710311726708686900/814441166879195146/3d_coin_v2_nightly_coop.patch -P enhancements
-		elif [ "$ANDROID" = 0 ] && [ ! "$GIT" = "render96/render96ex" ]; then
-			wget -q https://cdn.discordapp.com/attachments/721806706547490868/725041183700680807/3d_coin_v2_nightly.patch -P enhancements
-		fi
-		if [ -f "$BASEPATH"/"$PRESET"/enhancements/3d_coin_v2*.patch ]; then
-			bluecho Applying 3D Coin Patch...
-			git apply --whitespace=nowarn enhancements/3d_coin_v2*.patch
 		fi
 	fi
 	if [ "$EXTERNAL_DATA" = 1 ]; then
@@ -1301,79 +1304,87 @@ if  [ "$TARGET_WEB" = 1 ] || ([ "$EXTERNAL_DATA" = 0 ] && [ ! "$PRESET" = "sm64n
 		return
 	fi
 fi
-	cd "$BASEPATH"/"$PRESET"
-if  [ -d build/"$VERSION"_"$TARGET"/romfs/"Render 96" ] || [ -f enhancements/Render96_* ] || [ -f enhancements/RENDER96_* ] || [ -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ]; then
-	echo Render 96 SGI Models have already been directly applied to target repository.
-	return
-fi
+cd "$BASEPATH"/"$PRESET"
 if [ ! -d "$SMLINUX"/SGI ]; then
 	mkdir "$SMLINUX"/SGI
 fi
 if [ "$PRESET" = "sm64nx" ]; then
-	SGIFILE=NONE
-	bluecho Starting Render96 Texture Pak Download...
-	mkdir "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/"Render96 Textures"
-	cd "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/"Render96 Textures"
-	wget -https://sm64pc.info/downloads/texture_pack/render96_hd.pak &disown
-	cd "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/
-	if [ -d "Cleaner Aesthetics" ]; then
-		mv "Cleaner Aesthetics" "~Cleaner Aesthetics"
-	fi
-	if [ -d "HD Mario . Bowser" ]; then
-		mv "HD Mario . Bowser" "~HD Mario . Bowser"
-	fi
-	if [ -d "~SGI Models" ]; then
-		mv "~SGI Models" "SGI Models"
-	fi
-	if [ ! -d "SGI Models" ]; then
-		bluecho Downloading Render 96 SGI Model Pack V1.3nx...
-		mkdir "SGI Models"
-		cd "SGI Models"
-		wget -q https://sm64pc.info/downloads/sgi13_fixed.pak &
-	fi
-elif ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || ([ "$PRESET" = "sm64ex" ] && [ "$DYNOS" = 1 ]); then
-	SGIFILE=GITHUB
-	cd "$SMLINUX"/SGI
-	if [ -d "$SMLINUX"/SGI/modelpack ]; then
-		bluecho Starting Render 96 Model Pack Update from github...
-		cd modelpack
-		if [ "$DYNOS" = 1 ]; then
-			git pull --quiet &disown
-		else
-			git pull
-			echo Applying current Render96 modelpack directly over "$PRESET" source...
-			cp -r Render96/* "$BASEPATH"/"$PRESET"/actors
+	if  [ -d build/"$VERSION"_"$TARGET"/romfs/"Render 96" ]; then
+		echo Render 96 SGI Models have already been directly applied to target romfs..
+		return
+	elif [ "$MODELPACK" = 1 ]; then
+		bluecho Starting Render96 Texture Pak Download...
+		mkdir "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/"Render96 Textures"
+		cd "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/"Render96 Textures"
+		wget -https://sm64pc.info/downloads/texture_pack/render96_hd.pak &disown
+		cd "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/romfs/
+		if [ -d "Cleaner Aesthetics" ]; then
+			mv "Cleaner Aesthetics" "~Cleaner Aesthetics"
 		fi
-	elif [ "$DYNOS" = 1 ]; then
-		bluecho Starting Render 96 Model Pack Download from github...
-		git clone --quiet git://github.com/render96/modelpack &disown
-	else # render96ex with dynos disabled
-		bluecho Downloading Render 96 Model Pack Download from github...
-		git clone --progress git://github.com/render96/modelpack
-		echo Applying Latest Render96 modelpack...
-		cp -r modelpack/Render96/* "$BASEPATH"/"$PRESET"/actors/
-	fi
-elif [ "PRESET" = "r96master" ] || [ "$PRESET" = "r96droid" ]; then
-	SGIFILE=RENDER96_V1.4.2_Luigi.zip
-	if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
-		bluecho Downloading "$SGIFILE"...
-		wget -q https://cdn.discordapp.com/attachments/727722992137666573/768506877436755988/RENDER96_V1.4.2_Luigi.zip -P "$SMLINUX"/SGI
-	fi
-elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
-	SGIFILE=RENDER96_2.1_COOP.7z
-	if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
-		bluecho Downloading "$SGIFILE"...
-		wget https://cdn.discordapp.com/attachments/752628516075470998/795348384399097866/RENDER96_2.1_COOP.7z -P "$SMLINUX"/SGI
+		if [ -d "HD Mario . Bowser" ]; then
+			mv "HD Mario . Bowser" "~HD Mario . Bowser"
+		fi
+		if [ -d "~SGI Models" ]; then
+			mv "~SGI Models" "SGI Models"
+		fi
+		if [ ! -d "SGI Models" ]; then
+			bluecho Downloading Render 96 SGI Model Pack V1.3nx...
+			mkdir "SGI Models"
+			cd "SGI Models"
+			wget -q https://sm64pc.info/downloads/sgi13_fixed.pak &
+		fi
 	fi
 else
-	SGIFILE=RENDER96_V1.3.zip
-	if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
-		bluecho Downloading Render 96 SGI Model Pack V1.3
-		wget -q https://cdn.discordapp.com/attachments/727722992137666573/745038574918828112/RENDER96_V1.3.7z -O "$SMLINUX"/SGI/RENDER96_V1.3.zip
+	if ([ "$GIT" = "render96/render96ex" ] && [ ! "$PRESET" = "r96master" ] ) || ([ "$PRESET" = "sm64ex" ] && [ "$DYNOS" = 1 ] && [ "$BITS" = 64] ); then
+		cd "$SMLINUX"/SGI
+		if [ -d "$SMLINUX"/SGI/modelpack ]; then
+			bluecho Starting Render 96 Model Pack Update from github...
+			cd modelpack
+			if [ "$DYNOS" = 1 ]; then
+				git pull --quiet &disown
+			else
+				git pull
+				echo Applying current Render96 modelpack directly over "$PRESET" source...
+				cp -r Render96/* "$BASEPATH"/"$PRESET"/actors
+			fi
+		elif [ "$PRESET" = "sm64ex" ]; then
+			bluecho Starting Render 96 Model Pack Repository Download from github...
+			git clone --quiet git://github.com/render96/modelpack &disown
+		elif [ "$MODELPACK" = 1 ]; then
+			bluecho Downloading Render 96 Model Pack Repository from github...
+			git clone --progress git://github.com/render96/modelpack
+			echo Applying Latest Render96 modelpack...
+			cp -r modelpack/Render96/* "$BASEPATH"/"$PRESET"/actors/
+		fi
 	fi
-fi
-
-if [ ! "$SGIFILE" = "GITHUB" ] && [ ! "$PRESET" = "sm64nx" ]; then
+	if [ "$MODELPACK" = 0 ]; then
+		echo MODELPACK=0 so not applying Render 96 models over sm64 repository.
+		return
+	elif [ "PRESET" = "r96master" ] || [ "$PRESET" = "r96droid" ]; then
+		# SGIFILE=RENDER96_V1.4.2_Luigi.zip
+		SGIFILE=Render96_v1.4.2.7z
+		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
+			bluecho Downloading "$SGIFILE"...
+			wget https://github.com/Render96/ModelPack/releases/download/1.4.2/Render96_v1.4.2.7z -P "$SMLINUX"/SGI
+			# wget -q https://cdn.discordapp.com/attachments/727722992137666573/768506877436755988/RENDER96_V1.4.2_Luigi.zip -P "$SMLINUX"/SGI
+		fi
+	elif [ "$GIT" = "render96/render96ex" ]; then
+		SGIFILE=GITHUB
+	elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
+		SGIFILE=RENDER96_2.1_COOP.7z
+		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
+			bluecho Downloading "$SGIFILE"...
+			wget https://cdn.discordapp.com/attachments/752628516075470998/795348384399097866/RENDER96_2.1_COOP.7z -P "$SMLINUX"/SGI
+		fi
+	else
+		SGIFILE=Render96_v1.3.7z
+		#SGIFILE=RENDER96_V1.3.zip
+		if [ ! -f "$SMLINUX"/SGI/"$SGIFILE" ]; then
+			bluecho Downloading Render 96 SGI Model Pack V1.3
+			wget https://github.com/Render96/ModelPack/releases/download/1.3/Render96_v1.3.7z -P "$SMLINUX"/SGI
+			#wget -q https://cdn.discordapp.com/attachments/727722992137666573/745038574918828112/RENDER96_V1.3.7z -O "$SMLINUX"/SGI/RENDER96_V1.3.zip
+		fi
+	fi
 	cd "$BASEPATH"/"$PRESET"
 	if [ -f enhancements/3d_coin*.patch ] && [ ! "$GIT" = "s4Ys369/cheaterex" ] && [ ! "$GIT" = "djoslin0/sm64ex-coop" ]; then
 		bluecho Removing 3D coins...
@@ -1383,11 +1394,12 @@ if [ ! "$SGIFILE" = "GITHUB" ] && [ ! "$PRESET" = "sm64nx" ]; then
 		bluecho Removing Captain Toad Stars...
 		git apply -R --whitespace=nowarn enhancements/captain_toad_stars*.patch
 		rm enhancements/captain_toad_stars*.patch
-	else
-		removecheater
-		cd "$BASEPATH"/"$PRESET"
 	fi
-	echo Restoring default actors in preperation for overwrite...
+	if  [ -f enhancements/Render96_* ] || [ -f enhancements/RENDER96_* ] || [ -f enhancements/Old_School_HD_SGI_Base_Models_V1.3_Refresh_11* ]; then
+		echo Render 96 SGI Models have already been directly applied to target repository.
+		return
+	fi
+	echo Restoring default actors...
 	rm -rf actors
 	git checkout actors
 	if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
@@ -1396,11 +1408,16 @@ if [ ! "$SGIFILE" = "GITHUB" ] && [ ! "$PRESET" = "sm64nx" ]; then
 	if [ -f enhancements/hd_bowser.rar ]; then
 		rm  enhancements/hd_bowser.rar
 	fi
-	ln -s "$SMLINUX"/SGI/"$SGIFILE" "$BASEPATH"/"$PRESET"/enhancements/
-	bluecho Applying "$SGIFILE"...
-	7z x -aoa enhancements/"$SGIFILE" >/dev/null
+	if [ "$SGIFILE" = "GITHUB" ]; then
+		echo Applying latest Render 96 models from modelpack repository...
+		cp -r "$SMLINUX"/SGI/modelpack/Render96/* actors
+		touch enhancements/Render96_v-git
+	else
+		ln -s "$SMLINUX"/SGI/"$SGIFILE" "$BASEPATH"/"$PRESET"/enhancements/
+		bluecho Applying "$SGIFILE"...
+		7z x -aoa enhancements/"$SGIFILE" >/dev/null
+	fi
 fi
-
 if [ DOGS = CATS ] && [ ! "$ANDROID" = 0 ] && [ -f "$BASEPATH"/"$PRESET"/enhancements/render96_android.patch ]; then
 	echo Applying Android patch for Render96 models... # this patch is failing why bother
 	git apply --whitespace=nowarn enhancements/render96_android.patch
@@ -2191,7 +2208,7 @@ else   # The real start, the rest was script preperation and setup.
 		echo "| <romfile> install smlinux using specified romfile then build           |"
 		echo "|                                                                        |"
 		echo "|  Options:   --hd  install HD add-ons (ignore InstallHD=0)              |"
-		echo "|            --sgi  install R96 SGI model pack (ignore MODELPACK=0)     |"
+		echo "|            --sgi  install R96 SGI model pack (ignore MODELPACK=0)      |"
 		echo "|             --go  skip configuration editor (ignore CONFIG=1)          |"
 		echo "|         --config  prompt to edit config before build (ignore CONFIG=0) |"
 		echo "|           --nano  use nano instead of GUI to edit configuration file   |"
