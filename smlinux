@@ -6,7 +6,7 @@
 # Please let me know if incorrect or if you have anything to add.
 # This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
 # If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0327-1827
+TIMESTAMP=2021-0327-1832
 
 STARTSEC=$SECONDS
 
@@ -1399,14 +1399,16 @@ else
 		echo Render 96 SGI Models have already been directly applied to target repository.
 		return
 	fi
-	echo Restoring default actors...
-	rm -rf actors
-	git checkout actors
-	if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
-		rm enhancements/Old_School_HD_Mario_Model.zip
-	fi
-	if [ -f enhancements/hd_bowser.rar ]; then
-		rm  enhancements/hd_bowser.rar
+	if [ -f enhancements/Old_School_HD_Mario_Model.zip ] || [ -f enhancements/hd_bowser.rar ]; then
+		echo Restoring default actors...
+		rm -rf actors
+		git checkout actors
+		if [ -f enhancements/Old_School_HD_Mario_Model.zip ]; then
+			rm enhancements/Old_School_HD_Mario_Model.zip
+		fi
+		if [ -f enhancements/hd_bowser.rar ]; then
+			rm  enhancements/hd_bowser.rar
+		fi
 	fi
 	if [ "$SGIFILE" = "GITHUB" ]; then
 		echo Applying latest Render 96 models from modelpack repository...
