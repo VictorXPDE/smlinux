@@ -1,12 +1,13 @@
 #!/bin/bash
 # Super Mario 64 Install * Build * Update Script for the bourne again shell.
+# Published and shared free with no restrictions and no warranty, LICENSE file in github repository.
 # This script will build & install Super Mario 64 using mainly GNU tools
 # Depenency installation using apt/pacman/brew [debian/ubuntu/arch/mingw/macOS] included.
 # Dependencies for distros with other package managers are listed in github FAQ.
-# Please let me know if incorrect or if you have anything to add.
-# This script automatically updates itself using git from github.com/enigma9o7/smlinux unless AutoUpdate=0.
-# If you are making local changes you will want to disable automatic updates.
-TIMESTAMP=2021-0328-1548
+# Please submit issues or pull requests on github if any problems or anything to add.
+# This script automatically installs itself and updates itself using git from github.com/enigma9o7/smlinux
+# If you are making local changes you should disable automatic updates with Autoupdate=0
+TIMESTAMP=2021-0328-2041
 
 STARTSEC=$SECONDS
 
@@ -500,7 +501,6 @@ else
 fi
 greenecho smlinux completed "$COMMAND" in "$SHOWTIME".
 if [ "$COMMAND" = "build" ] || [ "$COMMAND" = "rebuild" ] || [ "$COMMAND" = "update" ]; then
-	#tput setab 0  # black background
 	tput setaf 6  # cyan text
 	echo "setup: " "$(($((PREPSEC - STARTSEC)) / 60))min $(($((PREPSEC - STARTSEC))% 60))sec"
 	echo "build: " "$(($((BUILDSEC - PREPSEC)) / 60))min $(($((BUILDSEC - PREPSEC))% 60))sec"
@@ -609,14 +609,15 @@ if [ -f /usr/bin/gcc ] || [ -f /bin/gcc ]; then
 	fi
 fi
 if command -v sudo &> /dev/null && command -v apt &> /dev/null; then
-	echo Attempting to install gcc 9.
+	greenecho Enter password if you wish smlinx to install newer gcc.
 	echo | sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+	echo Attempting to install gcc 9...
 	sudo apt install -y g++-9
 	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 80 --slave /usr/bin/g++ g++ /usr/bin/g++-9 --slave /usr/bin/gcov gcov /usr/bin/gcov-9
 	if [ `gcc -dumpversion` \> 8.99 ]; then
 		echo gcc 9 succesfully installed
 		return
-	else
+	else # for distros that dont have g++-9 in their repo and not supported by ubuntu ppa hopefully they have 8 which works fine
 		echo Attempting to install gcc 8.
 		sudo apt install -y g++-8
 		sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80 --slave /usr/bin/g++ g++ /usr/bin/g++-8 --slave /usr/bin/gcov gcov /usr/bin/gcov-8
@@ -1565,7 +1566,7 @@ elif [ "$DYNOS" = 0 ]; then
 	removedynos
 elif [ -f enhancements/DynOS.0.6.patch ]; then
 	echo DynOS 0.6 patchtfile already present, skipping application.
-elif [ "$BITS" = 32 ]; then
+elif [ "$BITS" = 32 ] || [ "$PRESET" = "r96master" ]; then
 	if [ -f enhancements/DynOS.0.5.patch ]; then
 		echo DynOS 0.5 patchtfile already present, skipping application.
 	else
@@ -1650,6 +1651,7 @@ fi
 }
 
 docheats(){
+#called after dodynos
 cd "$BASEPATH"/"$PRESET"/enhancements
 if [ "$GIT" = "s4Ys369/cheaterex" ] || ([ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] ); then
 	if [ "$CHEATER" = 1 ] ; then
@@ -1684,7 +1686,7 @@ elif [ "$GIT" = "djoslin0/sm64ex-coop" ]; then
 		ZIPFILE=CHEATER.coop.v3.patch.zip
 		CHEATERFILE=CHEATER.coop.v3.patch
 	fi
-elif [ "$DYNOS" = 1 ] && [ "$BITS" = 64 ] && ([ "$PRESET" = "sm64ex" ] || [ "$PRESET" = "r96master" ]); then
+elif [ "$DYNOS" = 1 ] && [ "$BITS" = 64 ] && [ "$PRESET" = "sm64ex" ]; then
 	if [ -f CHEATERv11.5.ex.zip ]; then
 		echo CHEATER 11.5 already present, skipping application.
 	else
@@ -1714,9 +1716,9 @@ if [ ! -z "$CHEATERFILE" ] && [ -f "$ZIPFILE" ]; then
 	unzip -q "$ZIPFILE" "$CHEATERFILE"
 	bluecho Applying CHEATER with "$CHEATERFILE"...
 	cd ..
-	if ! git apply enhancements/"$CHEATERFILE"; then
-		pinkecho WARNING: Cheater was force applied with --reject!
-		git apply enhancements/"$CHEATERFILE" --reject
+	if ! git apply --whitespace=nowarn enhancements/"$CHEATERFILE"; then
+		pinkecho WARNING: CHEATER patch is being force applied with --reject!
+		git apply --whitespace=nowarn enhancements/"$CHEATERFILE" --reject
 	fi
 fi
 }
@@ -1989,6 +1991,9 @@ else
 	COMMAND=dunno
 fi
 if [ -f "$SMLINUX"/.noweb ]; then
+# UNDOCUMENTED FEATURE!  Put a file called .noweb in your .local/share/smlinux and the noweb will be automatic.
+# because of the python gui i dunno how to add more things to config file without adding to gui so this is workaround
+# useful for those who are tesitng things that are likely to break and dont need to be sent to discord for help
 	OP1=--noweb
 fi
 if [ "$COMMAND" = "dunno" ] && command -v whiptail &> /dev/null; then
