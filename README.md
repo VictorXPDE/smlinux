@@ -217,7 +217,7 @@ If the patch errors when you try to apply it, and you want to use it anyway, you
 4. Put custom patchfile in enhancements folder then apply it: `git apply enhancements/custom.patch`  
 5. Build with 60fps disabled in smlinux configuration: `smlinux update`  
 
-smlinux does not track user applies patches, and the 60fps patch is included with the repository.  If you enable 60fps in smlinux configuration, smlinux will attempt to apply the patch again which may defeat the purpose of why you applied it first, so just leave it disabled.
+smlinux does not track user applied patches, and the 60fps patch is included with the repository.  If you enable 60fps in smlinux configuration, smlinux will attempt to apply the patch again which may defeat the purpose of why you applied it first, so just leave it disabled.
 
 **Method Two**: Starting from previous build with 60fps already applied - and maybe CHEATER and/or DynOS too:  
 
