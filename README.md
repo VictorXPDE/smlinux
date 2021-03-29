@@ -54,7 +54,7 @@ sm64nx, Discord Rich Presence and Dynos Model Loader for sm64ex are not supporte
 * [<strong>How do I run smlinux again? Where did it install itself to?</strong>](#how-do-i-run-smlinux-again)
 * [<strong>What preset/repo/branch should I chose?</strong>](#what-presetrepositorybranch-should-i-use)
 * [<strong>What does the InstallHD option do?</strong>](#what-does-the-installhd-option-do)
-* [<strong>What does the MODELPACK option do?</strong>](#what-does-the-installsgi-option-do)
+* [<strong>What does the MODELPACK option do?</strong>](#what-does-the-modelpack-option-do)
 * [<strong>What does the HIGHFPS option do?</strong>](#what-does-the-fps60-option-do)
 * [<strong>How do I build other branches or from repositories not defined by preset?</strong>](#how-do-i-build-other-branches-or-from-repositories-not-defined-by-preset)
 * [<strong>When to use RENDER_API=GL_LEGACY?</strong>](#when-to-use-render_apigl_legacy)
@@ -87,9 +87,9 @@ On the sm64nx fork, Arredondo's HD Mario & Bowser and Cleaner Aesthetics texture
 
 ## **What does the MODELPACK option do?**
 
-This will apply or enable Render 96 models, depending on your chosen repository and options.
+This will apply or enable Render 96 models, depending on your chosen repository and options.  This will override any other add-on modules you or smlinux may have applied.
 
-For the r96master preset, version 1.42 is directly applied, while other render96ex branches except the r96proto preset, the latest version from the Render 96 modelpack repository is directly applied. For m64ex-coop a co-op specific version that includes Luigi is directly applied, while for sm64ex based forks, version 1.3 is directly applied.
+For the r96master preset, version 1.42 is directly applied, while other render96ex branches except the r96proto preset, the latest version from the Render 96 modelpack repository is directly applied.  For m64ex-coop a co-op specific version that includes Luigi is directly applied, while for sm64ex based forks, version 1.3 is directly applied.
 
 Additionally on builds that support Dynamic Option Model Loading, this will download Render96's latest SGI models from github and add to dynos menu.  
 
