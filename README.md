@@ -73,7 +73,7 @@ sm64nx, Discord Rich Presence and Dynos Model Loader for sm64ex are not supporte
 <img src=https://github.com/enigma9o7/smlinux/raw/screenshot/presets.png>
 
 ## **What preset/repository/branch should I use?**
-If you want to build for PC, the source repository from the team who decompiled the rom, sm64-port, offers the cleanest code and duplication of N64, with currently very few add-ons available.  The unofficial forks, sm64ex and sm64nx, include enhancements and support for many add-ons (which are optional on sm64ex).  sm64ex offers the most flexibility, but you are encouraged to build more than one and try for yourself.  Further forks of sm64ex offer additional enhancements, such as render96ex with additional language support and game features, sm64ex-coop for a 2 player network mode, or cheaterex for all the latest experimental add-ons. For android or web, presets are available based on sm64-port or sm64ex, while for for dos sm64-port based forks are used. 
+If you want to build for PC, the source repository from the team who decompiled the rom, sm64-port, offers the cleanest code and duplication of N64, with a few available add-ons.  The unofficial forks, sm64ex and sm64nx, include enhancements and support for many add-ons (which are optional on sm64ex).  sm64ex offers the most flexibility, but you are encouraged to build more than one and try for yourself.  Further forks of sm64ex offer additional enhancements, such as render96ex with additional language support and game features, sm64ex-coop for a 2 player network mode, or cheaterex for all the latest experimental add-ons. For android or web, presets are available based on sm64-port or sm64ex, while for for dos sm64-port based forks are used. 
 
 ## **What does the InstallHD option do?**
 
@@ -87,7 +87,7 @@ On the sm64nx fork, Arredondo's HD Mario & Bowser and Cleaner Aesthetics texture
 
 ## **What does the MODELPACK option do?**
 
-This will apply or enable Render 96 models, depending on your chosen repository and options.  This will override any other add-on modules you or smlinux may have applied.
+This will apply or enable Render 96 SGI models, depending on your chosen repository and options.  This will override any other add-on models you or smlinux may have applied.
 
 For the r96master preset, version 1.42 is directly applied, while other render96ex branches except the r96proto preset, the latest version from the Render 96 modelpack repository is directly applied.  For m64ex-coop a co-op specific version that includes Luigi is directly applied, while for sm64ex based forks, version 1.3 is directly applied.
 
