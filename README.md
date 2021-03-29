@@ -83,11 +83,15 @@ On sm64pc/sm64ex based forks upscaled textures will aslo be added to your build 
 
 On the sm64nx fork, Arredondo's HD Mario & Bowser and Cleaner Aesthetics textures are set as defaults, along with a few other small add-on paks which can be enabled from the in-game mod selection menu, including an HD Luigi model replacement.
 
-*Some of these addons require files remaining available in discord or github, so not gauranteed to work.  What is included with this option may periodically change as new mods are released.*
+*Some of these addons require files remaining available in discord or github, so please report any broken links!  What is included with this option may periodically change as new mods are released.*
 
 ## **What does the MODELPACK option do?**
 
-For render96ex and sm64ex with a dynos model loader, this will download Render96's latest SGI models from github and add to dynos menu.   On sm64ex-coop a co-op specific version that includes Luigi is directly applied, while for sm64ex based forks, version 1.3 is directly applied - unless you enable dynos and installhd.  For the r96master preset, version 1.42 is directly applied. 
+This will apply or enable Render 96 models, depending on your chosen repository and options.
+
+For the r96master preset, version 1.42 is directly applied, while other render96ex branches except the r96proto preset, the latest version from the Render 96 modelpack repository is directly applied. For m64ex-coop a co-op specific version that includes Luigi is directly applied, while for sm64ex based forks, version 1.3 is directly applied.
+
+Additionally on builds that support Dynamic Option Model Loading, this will download Render96's latest SGI models from github and add to dynos menu.  
 
 For sm64nx, this option will add paks for Render96's SGI Models (version 1.3) and Render96's HD textures and set them as defaults.  Be aware this model pak for sm64nx has minor visual problems and is no longer mainained, but can easily be reverted to default or HD models with the in-game mod menu that *only* sm64nx offers.
 
