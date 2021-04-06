@@ -273,7 +273,7 @@ Some build targets depend on additional packages, for example Android builds req
 
 If unrar is not available, then unar or p7zip-rar will be installed instead.
 
-**Arch** Otherwise if smlinux detects `pacman` it is used to install the following packages:  
+**Arch/Manjaro** Otherwise if smlinux detects `pacman` it is used to install the following packages:  
 
 	 base-devel python audiofile sdl2 glew python-zstandard python-pip zstd zenity unzip zip unrar 
 
