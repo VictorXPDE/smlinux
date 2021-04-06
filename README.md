@@ -219,7 +219,7 @@ If the patch errors when you try to apply it, and you want to use it anyway, you
 
 smlinux does not track user applied patches, and the 60fps patch is included with the repository.  If you enable 60fps in smlinux configuration, smlinux will attempt to apply the patch again which may defeat the purpose of why you applied it first, so just leave it disabled.
 
-**Method Two**: Starting from previous build with 60fps already applied - and maybe CHEATER and/or DynOS too:  
+**Method Two**: Starting from exiting source with 60fps already applied - and maybe CHEATER and/or DynOS too:  
 
 1. Change to existing folder: `cd ~/sm64ex`  
 2. Reverse apply CHEATER: `git apply -R enhancements/CHEATER*.patch`  
@@ -227,7 +227,7 @@ smlinux does not track user applied patches, and the 60fps patch is included wit
 3. Reverse apply DynOS `git apply -R enhancements/DynOS*.patch`  
 3. Remove DynOS patchfile: `rm enhancements/DynOS*.patch`  
 4. Put custom patchfile in enhancements folder then apply it: `git apply enhancements/custom.patch`  
-5. Build with same settings: `smlinux update`  
+5. Build with same settings: `smlinux update go`  
 
 This works because when smlinux applies the 60fps patch it touches a file called 60fps to track application.  However, because the dynos and cheater patch files are no longer present, smlinux will add and apply them before building if the option is selected.  Alternatively, you could reapply them after your custom patch instead of deleting them.  
 
