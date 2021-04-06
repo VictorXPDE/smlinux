@@ -256,7 +256,7 @@ If you are not using debian/ubuntu/arch/msys/macos you must paste the command st
 	
 Some build targets depend on additional packages, for example Android builds require `android-sdk`, DOS targets require `djgpp`, web targets emscripten, sm64nx requires `g++` version 8 or newer, and using `sdl1` requires additional libraries, all of which smlinux only installs when those targets are specified.  Users of operating systems without advanced package tool may need to install the appropriate GCC/SDL/SDK/JDK with appropriate package manager.  
 
-For macOS, Msys, and linux that uses apt or pacman, smlinux should install everything for you.
+**For macOS, Msys, and linux that uses apt or pacman, smlinux should install everything for you.**
 
 **macOS** If smlinux detects `Darwin` the following packages are installed with `brew`:
 
