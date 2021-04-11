@@ -7,7 +7,7 @@
 # Please submit issues or pull requests on github if any problems or anything to add.
 # This script automatically installs itself and updates itself using git from github.com/enigma9o7/smlinux
 # If you are making local changes you should disable automatic updates with Autoupdate=0
-TIMESTAMP=2021-0410-1351
+TIMESTAMP=2021-0411-1418
 
 STARTSEC=$SECONDS
 
@@ -187,6 +187,12 @@ BUILDSEC=$SECONDS
 }
 
 setpathdir(){
+# Make sure this function is same in main program and installer subscript!
+if [ `uname` = "Darwin" ]; then
+	OSX_BUILD=1
+elif [ `uname -o` = "Msys" ]; then
+	MSYS=1
+fi
 if [ "$OSX_BUILD" = 1 ] || [ "$MSYS" = 1 ]; then
 	PATHDIR=/usr/local/bin
 else
@@ -1474,63 +1480,68 @@ if [ ! -f ~/.smlinuxUpdate ]; then
 				fi
 			else
 				echo 'SMLINUX=${XDG_DATA_HOME:-$HOME/.local/share}/smlinux
-				if [ "$OSX_BUILD" = 1 ] || [ "$MSYS" = 1 ]; then
-					PATHDIR=/usr/local/bin
-				else
-					for folder in bin .local/bin .local/share/bin Applications/bin Applications/.bin .bin .local/share/.bin .local/.bin
-				do
-					if [ ! `echo $PATH | grep "$HOME"/"$folder"` = "" ]; then
-						PATHDIR="$HOME"/"$folder"
-						if [ ! -d "$PATHDIR" ] && ! mkdir "$PATHDIR"; then
-							if [ "$folder" = "Applications/bin" ] || [ "$folder" = "Applications/.bin" ]; then
-								mkdir "$HOME"/Applications
-								mkdir "$PATHDIR"
-							else
-								mkdir "$HOME"/.local/share
-								mkdir "$PATHDIR"
-							fi
-						fi
-						break
-					fi
-				done
-				fi
-				if [ -z "$PATHDIR" ]; then
-					PATHDIR=$HOME/bin
-					if [ ! -d "$PATHDIR" ]; then
-						mkdir "$PATHDIR"
-					fi
-					export PATH=$HOME/bin:$PATH
-					PATH=$HOME/bin:$PATH
-					touch "$HOME"/.smlinuxNopath
-					if [ -f "$HOME"/.bashrc ]; then
-						bluecho Adding $HOME/bin to bash/zsh path...
-						echo 'export PATH=$HOME/bin:$PATH' >>~/.bashrc
-					fi
-					if [ -f "$HOME"/.zshrc ]; then
-						bluecho Adding $HOME/bin to zsh path...
-						echo 'export PATH=$HOME/bin:$PATH' >>~/.zshrc
-					fi
-				fi
-				if mapfile -t -d: <<<"$PATH" >/dev/null 2>&1 && [ -f "${MAPFILE[0]}"/smlinux ]; then # get rid of one in old path
-					rm "${MAPFILE[0]}"/smlinux
-				fi
-				mv -f "$SMLINUX"/smlinux "$PATHDIR"/
-				if [ ! -f "$PATHDIR"/smlinux ]; then
-					echo ERROR - Could not write "$PATHDIR"/smlinux
-					echo Run again with AutoUpdate disabled.
-					exit
-				fi
-				chmod +x "$PATHDIR"/smlinux
-				exec "$PATHDIR"/smlinux "$@"' > ~/.smlinuxUpdate
+setpathdir(){
+# Make sure this function is same in main program and installer subscript!
+if [ `uname` = "Darwin" ]; then
+	OSX_BUILD=1
+elif [ `uname -o` = "Msys" ]; then
+	MSYS=1
+fi
+if [ "$OSX_BUILD" = 1 ] || [ "$MSYS" = 1 ]; then
+	PATHDIR=/usr/local/bin
+else
+	for folder in bin .local/bin .local/share/bin Applications/bin Applications/.bin .bin .local/share/.bin .local/.bin
+do
+	if [ ! `echo $PATH | grep "$HOME"/"$folder"` = "" ]; then
+		PATHDIR="$HOME"/"$folder"
+		if [ ! -d "$PATHDIR" ] && ! mkdir "$PATHDIR" ; then
+			if [ "$folder" = "Applications/bin" ] || [ "$folder" = "Applications/.bin" ]; then
+				mkdir "$HOME"/Applications
+				mkdir "$PATHDIR"
+			else
+				mkdir "$HOME"/.local/share
+				mkdir "$PATHDIR"
+			fi
+		fi
+		return
+	fi
+done
+	# This only happens if above didnt find a folder and return
+	if [ ! -d "$HOME"/bin ]; then
+		mkdir "$HOME"/bin
+	fi
+	export PATH=$HOME/bin:$PATH
+	PATH=$HOME/bin:$PATH
+	PATHDIR=$HOME/bin
+	touch "$HOME"/.smlinuxNopath
+	if [ -f "$HOME"/.bashrc ]; then
+		bluecho Adding $HOME/bin to bash/zsh path...
+		echo 'export PATH=$HOME/bin:$PATH' >>~/.bashrc
+	fi
+	if [ -f "$HOME"/.zshrc ]; then
+		bluecho Adding $HOME/bin to zsh path...
+		echo 'export PATH=$HOME/bin:$PATH' >>~/.zshrc
+	fi
+fi
+}
+setpathdir
+mv -f "$SMLINUX"/smlinux "$PATHDIR"/
+if [ ! -f "$PATHDIR"/smlinux ]; then
+	echo ERROR - Could not write "$PATHDIR"/smlinux
+	echo Run again with AutoUpdate disabled.
+	exit
+fi
+chmod +x "$PATHDIR"/smlinux
+exec "$PATHDIR"/smlinux "$@"' > ~/.smlinuxUpdate
 				chmod +x ~/.smlinuxUpdate
 				cd "$LAUNCH_DIR"
 				exec ~/.smlinuxUpdate "$COMMAND" "$OP1" "$OP2" "$OP3" "$OP4"
 			fi
-		elif [ "$COMMAND" = "upgrade" ]; then
-			echo smlinux is already the latest version "$TIMESTAMP".
-			exit
 		else
 			echo smlinux is already the latest version "$TIMESTAMP".
+		fi
+		if [ "$COMMAND" = "upgrade" ]; then
+			exit
 		fi
 	fi
 fi
@@ -1930,18 +1941,21 @@ fi
 if [ ! -d "$SHARE" ]; then
 	mkdir "$SHARE"
 fi
-
-if [ `uname` = "Darwin" ]; then
-	OSX_BUILD=1
+setpathdir
+if [ `uname -m` = "x86_64" ] || [ `uname -m` = "aarch64" ]; then
+	BITS=64
+else
+	BITS=32
+fi
+if [ "$OSX_BUILD" = 1 ]; then
 	OPEN=open
-elif [ `uname -o` = "Msys" ]; then
+elif [ "$MSYS" =1 ]; then
 	if [ "`uname|grep MINGW`" = "" ]; then
 		redecho "ERROR: MSYS2 users must use Minimal GNU for Windows (mingw)."
 		redecho Close MSYS terminal and run smlinux from MINGW64 or MINGW32.
 		exit
 	fi
-    MSYS=1
-	OPEN=start
+    OPEN=start
 elif command -v xdg-open &> /dev/null; then
 	OPEN=xdg-open
 elif command -v firefox &> /dev/null; then
@@ -1949,13 +1963,6 @@ elif command -v firefox &> /dev/null; then
 else
 	OPEN=echo
 fi
-setpathdir
-if [ `uname -m` = "x86_64" ] || [ `uname -m` = "aarch64" ]; then
-	BITS=64
-else
-	BITS=32
-fi
-
 if [ -z "$1" ] && [ ! -d "$SMLINUX"/.git ]; then # new install
 	COMMAND=build
 elif [ "$1" = "-help" ] || [ "$1" = "--help" ] || [ "$1" = "-h" ] || [ "$1" = "--h" ]; then
@@ -1994,8 +2001,8 @@ if [ "$COMMAND" = "dunno" ] && command -v whiptail &> /dev/null; then
 	title=blue,black           # make choice with arrows
 	checkbox=brightcyan,black  # important list
 	compactbutton=blue,black   # ok button'
-	if ! COMMAND=$(whiptail --title "Make Choice with Arrows then [SPACE BAR]" --ok-button "[SPACE BAR] then [ENTER]" --nocancel --radiolist "        After spacebar press [Enter] to proceed." 16 60 9 \
-	 --backtitle "     Super Mario 64 Install * Build * Update Script for Linux and macOS" \
+	if ! COMMAND=$(whiptail --title "Select command with Arrows then [SPACE BAR]" --ok-button "[SPACE BAR] then [ENTER]" --nocancel --radiolist "        After spacebar press [Enter] to proceed." 16 60 9 \
+	 --backtitle "   Super Mario 64 Install * Build * Update Script for the Bourne Again Shell" \
 	"build" "get clean sm64 source and build it" ON \
 	"update" "update sm64 source and rebuild it" OFF \
 	"clone" "get clean sm64 source and extract rom" OFF \
