@@ -7,7 +7,7 @@
 # Please submit issues or pull requests on github if any problems or anything to add.
 # This script automatically installs itself and updates itself using git from github.com/enigma9o7/smlinux
 # If you are making local changes you should disable automatic updates with Autoupdate=0
-TIMESTAMP=2021-0411-1418
+TIMESTAMP=2021-0411-1440
 
 STARTSEC=$SECONDS
 
@@ -220,10 +220,8 @@ done
 	PATH=$HOME/bin:$PATH
 	PATHDIR=$HOME/bin
 	touch "$HOME"/.smlinuxNopath
-	if [ -f "$HOME"/.bashrc ]; then
-		bluecho Adding $HOME/bin to bash/zsh path...
+	bluecho Adding $HOME/bin to bash path...
 		echo 'export PATH=$HOME/bin:$PATH' >>~/.bashrc
-	fi
 	if [ -f "$HOME"/.zshrc ]; then
 		bluecho Adding $HOME/bin to zsh path...
 		echo 'export PATH=$HOME/bin:$PATH' >>~/.zshrc
@@ -1514,10 +1512,8 @@ done
 	PATH=$HOME/bin:$PATH
 	PATHDIR=$HOME/bin
 	touch "$HOME"/.smlinuxNopath
-	if [ -f "$HOME"/.bashrc ]; then
-		bluecho Adding $HOME/bin to bash/zsh path...
+	bluecho Adding $HOME/bin to bash path...
 		echo 'export PATH=$HOME/bin:$PATH' >>~/.bashrc
-	fi
 	if [ -f "$HOME"/.zshrc ]; then
 		bluecho Adding $HOME/bin to zsh path...
 		echo 'export PATH=$HOME/bin:$PATH' >>~/.zshrc
@@ -1949,7 +1945,7 @@ else
 fi
 if [ "$OSX_BUILD" = 1 ]; then
 	OPEN=open
-elif [ "$MSYS" =1 ]; then
+elif [ "$MSYS" = 1 ]; then
 	if [ "`uname|grep MINGW`" = "" ]; then
 		redecho "ERROR: MSYS2 users must use Minimal GNU for Windows (mingw)."
 		redecho Close MSYS terminal and run smlinux from MINGW64 or MINGW32.
