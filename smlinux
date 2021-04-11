@@ -7,7 +7,7 @@
 # Please submit issues or pull requests on github if any problems or anything to add.
 # This script automatically installs itself and updates itself using git from github.com/enigma9o7/smlinux
 # If you are making local changes you should disable automatic updates with Autoupdate=0
-TIMESTAMP=2021-0411-1440
+TIMESTAMP=2021-0411-1444
 
 STARTSEC=$SECONDS
 
@@ -296,7 +296,7 @@ brewdepends(){
  	if ! command -v unzip &> /dev/null; then
  		brew install unzip
  	fi
-	for package in libxdg-basedir coreutils wget newt nano go unar p7zip python@3.8 PyQt5 git make gcc@9 mingw-w64 sdl2 pkg-config glew glfw3 libusb audiofile zstd
+	for package in libxdg-basedir coreutils wget newt nano go unar p7zip python@3.8 PyQt5 git make gcc@9.3.0 mingw-w64 sdl2 pkg-config glew glfw3 libusb audiofile zstd
 do
 	brew install $package
 done
