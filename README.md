@@ -97,7 +97,7 @@ For sm64nx, this option will add paks for Render96's SGI Models (version 1.3) an
 
 ## **What does the HIGHFPS option do?**
 
-On branches that support HIGHFPS as a build flag (currently render96ex alpha and testing) it will enabled for 60fps support.On repositories that provide a 60fps patch (currently sm64-port, render96ex master, and sm64ex-nightly) it will be applied when this option set to 1, and reverse applied when set to 0.  Note that some forks (such as sm64ex-coop, cheaterex, and sm64nx) are already 60fps without a patch and this setting will have no effect.  The currently available patch for sm64ex uses interpolation and may require adjustments to in-game vsync setting for smooth performance, and may not work correctly on displays that aren't 60/120Hz and may not perform well on older computers.
+On branches that support HIGHFPS as a build flag it will enabled for 60fps support. For repositories that provide a 60fps patch (currently sm64-port, render96ex master, and sm64ex-nightly) it will be applied when this option set to 1, and reverse applied when set to 0.  Note that some forks (such as sm64ex-coop, cheaterex, and sm64nx) are already 60fps without a patch and this setting will have no effect, while the latest version of render96ex offers 60fps as a setting.  The currently available patch for sm64ex uses interpolation and may require adjustments to in-game vsync setting for smooth performance, and may not work correctly on displays that aren't 60/120Hz and may not perform well on older computers.
 
 ## **How do I build other branches or from repositories not defined by preset?**
 
