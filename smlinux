@@ -7,7 +7,7 @@
 # Please submit issues or pull requests on github if any problems or anything to add.
 # This script automatically installs itself and updates itself using git from github.com/enigma9o7/smlinux
 # If you are making local changes you should disable automatic updates with Autoupdate=0
-TIMESTAMP=2021-0328-2041
+TIMESTAMP=2021-0410-1351
 
 STARTSEC=$SECONDS
 
@@ -184,16 +184,6 @@ if [ -f /usr/bin/mplayer ] && [ -f "$SMLINUX"/File_Select_64_slowed_down.mp3 ] &
 	killall -q -y1h mplayer
 fi
 BUILDSEC=$SECONDS
-}
-
-gitstash(){
-if ! git stash push --quiet; then
-	pinkecho WARNING: Stash failure. Setting username and trying again
-	git config user.name "smlinux"
-	git config user.email "mario@ms64.com"
-	git stash push --quiet
-fi
-git stash drop --quiet
 }
 
 setpathdir(){
@@ -513,7 +503,7 @@ if [ "$COMMAND" = "build" ] || [ "$COMMAND" = "rebuild" ] || [ "$COMMAND" = "upd
 		git log -1 --format=%cd
 	fi
 fi
-if [ "$MSYS" = 1 ] && command -v zenity &> /dev/null; then
+if [ "$MSYS" = 1 ] && [ "$BITS" = 64 ] && command -v zenity &> /dev/null; then
 	zenity --info --text="Shits done yo." &disown # homage to sm64pcbuilder2
 fi
 greenecho "smlinux ""$TIMESTAMP" done.  Enter smlinux or smlinux "[command]" to use again.
@@ -1138,8 +1128,8 @@ else
 		dosgi
 		cd "$BASEPATH"/"$PRESET"
 	fi
-	if [ ! "$TARGET" = "dos" ]; then
-		if [ ! -d "$SMLINUX"/models ]; then
+	if [ ! "$TARGET" = "dos" ] && [ ! "$PRESET" = "r96proto" ]; then
+			if [ ! -d "$SMLINUX"/models ]; then
 			mkdir "$SMLINUX"/models
 		fi
 		if [ ! -f "$SMLINUX"/models/Old_School_HD_Mario_Model.zip ]; then
@@ -1311,7 +1301,7 @@ if [ ! -d "$SMLINUX"/SGI ]; then
 fi
 if [ "$PRESET" = "sm64nx" ]; then
 	if  [ -d build/"$VERSION"_"$TARGET"/romfs/"Render 96" ]; then
-		echo Render 96 SGI Models have already been directly applied to target romfs..
+		echo "Render 96 SGI Models are already installed.  Note the M on Mario's cap."
 		return
 	elif [ "$MODELPACK" = 1 ]; then
 		bluecho Starting Render96 Texture Pak Download...
@@ -1354,8 +1344,6 @@ else
 		elif [ "$MODELPACK" = 1 ]; then
 			bluecho Downloading Render 96 Model Pack Repository from github...
 			git clone --progress --single-branch git://github.com/render96/modelpack
-			echo Applying Latest Render96 modelpack...
-			cp -r modelpack/Render96/* "$BASEPATH"/"$PRESET"/actors/
 		fi
 	fi
 	if [ "$MODELPACK" = 0 ]; then
@@ -2082,7 +2070,7 @@ else
 	loadconfig "$COMMAND" "$2" "$3" "$4" "$5" "$6"
 fi
 if [ -d "$BASEPATH"/r96alpha ]; then
-	pinkecho r96alpha preset has been deprecated.  Use the render96ex prest for the alpha branch.
+	pinkecho r96alpha preset has been deprecated.  Use the render96ex preset for alpha branch.
 	pinkecho "If you wish to build render96ex's master branch, use the new r96master preset."
 	echo Smlinux created folders and shortcuts are being updated...
 	if [ -d "$BASEPATH"/render96ex ]; then
