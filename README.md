@@ -253,6 +253,9 @@ If you are not using debian/ubuntu/arch/msys/macos you must paste the command st
 **Alpine**
 
 	sudo apk add build-base python3 audiofile-dev sdl2-dev glew-dev zenity
+
+**Gentoo**
+	sudo emerge --ask dev-lang/python:3.8 media-libs/audiofile media-libs/glew media-libs/libsdl2 dev-python/zstd app-arch/zstd dev-python/PyQt5 gnome-extra/zenity dev-libs/newt app-arch/unrar app-arch/p7zip
 	
 Some build targets depend on additional packages, for example Android builds require `android-sdk`, DOS targets require `djgpp`, web targets emscripten, sm64nx requires `g++` version 8 or newer, and using `sdl1` requires additional libraries, all of which smlinux only installs when those targets are specified.  Users of operating systems without advanced package tool may need to install the appropriate GCC/SDL/SDK/JDK with appropriate package manager.  
 
