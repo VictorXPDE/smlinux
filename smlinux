@@ -7,7 +7,7 @@
 # Please submit issues or pull requests on github if any problems or anything to add.
 # This script automatically installs itself and updates itself using git from github.com/enigma9o7/smlinux
 # If you are making local changes you should disable automatic updates with Autoupdate=0
-TIMESTAMP=2021-0411-1444
+TIMESTAMP=2021-0411-1908
 
 STARTSEC=$SECONDS
 
@@ -1191,7 +1191,7 @@ else
 				fi
 			fi
 		fi
-		if [ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] && [ -d "$SMLINUX"/SGI/modelpack/Goddard/src/goddard ] && [ -f "$BASEPATH"/"$PRESET"/enhancements/hdgoddard ]; then
+		if [ "$GIT" = "render96/render96ex" ] && [ ! "$BRANCH" = "master" ] && [ -d "$SMLINUX"/SGI/modelpack/Goddard/src/goddard ] && [ ! -f "$BASEPATH"/"$PRESET"/enhancements/hdgoddard ]; then
 			echo "Applying HD Mario Intro (goddard)..."
 			cp -r "$SMLINUX"/SGI/modelpack/Goddard/* "$BASEPATH"/"$PRESET"
 			touch "$BASEPATH"/"$PRESET"/enhancements/hdgoddard
