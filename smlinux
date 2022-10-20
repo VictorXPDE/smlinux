@@ -5,7 +5,7 @@
 # Depenency installation using apt/pacman/brew [debian/ubuntu/arch/mingw/macOS] included.
 # Dependencies for distros with other package managers are listed in github FAQ.
 # Please submit issues or pull requests on github if any problems or anything to add.
-# This script automatically installs itself and updates itself using git from github.com/enigma9o7/smlinux
+# This script automatically installs itself and updates itself using git from github.com/VictorXPDE/smlinux
 # If you are making local changes you should disable automatic updates with Autoupdate=0
 TIMESTAMP=2021-0411-1908
 
@@ -1032,7 +1032,7 @@ fi
 loademsdk(){
 if [ ! -d "$BASEPATH"/emsdk ]; then
 	cd "$BASEPATH"
-	git clone --progress git://github.com/emscripten-core/emsdk
+	git clone --progress https://github.com/emscripten-core/emsdk
 	cd emsdk
 	./emsdk install 1.39.5
 	./emsdk activate 1.39.5
@@ -1229,7 +1229,7 @@ else
 		if [ ! -d "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ] && [ ! -f "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx ]; then
 			if ([ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "r96droid" ]) && [ ! -d RENDER96-HD-TEXTURE-PACK ]; then
 				bluecho Starting Render96 Texture Download...
-				git clone --quiet --single-branch git://github.com/pokeheadroom/RENDER96-HD-TEXTURE-PACK &disown
+				git clone --quiet --single-branch https://github.com/pokeheadroom/RENDER96-HD-TEXTURE-PACK &disown
 				bgdl=r96 # background download in progress
 			elif [ "$GIT" = "render96/render96ex" ] || [ "$PRESET" = "r96droid" ]; then
 				bluecho Starting Render96 Textures Update...
@@ -1240,7 +1240,7 @@ else
 				ln -s "$SMLINUX"/RENDER96-HD-TEXTURE-PACK/gfx "$BASEPATH"/"$PRESET"/build/"$VERSION"_"$TARGET"/res/gfx
 			elif [ ! -d "$SMLINUX"/Cleaner-Aesthetics ]; then
 				bluecho Starting Cleaner Aesthetics Texture Download...
-				git clone --quiet --single-branch git://github.com/CrashCrod/Cleaner-Aesthetics &disown
+				git clone --quiet --single-branch https://github.com/CrashCrod/Cleaner-Aesthetics &disown
 				bgdl=ca # background download in progress
 			else
 				bluecho Starting Cleaner Aesthetic texture update...
@@ -1344,10 +1344,10 @@ else
 			fi
 		elif [ "$PRESET" = "sm64ex" ]; then
 			bluecho Starting Render 96 Model Pack Repository Download from github...
-			git clone --quiet --single-branch git://github.com/render96/modelpack &disown
+			git clone --quiet --single-branch https://github.com/render96/modelpack &disown
 		elif [ "$MODELPACK" = 1 ]; then
 			bluecho Downloading Render 96 Model Pack Repository from github...
-			git clone --progress --single-branch git://github.com/render96/modelpack
+			git clone --progress --single-branch https://github.com/render96/modelpack
 		fi
 	fi
 	if [ "$MODELPACK" = 0 ]; then
@@ -1429,7 +1429,7 @@ if [ ! -f ~/.smlinuxUpdate ]; then
 			fi
 			mv -f "$SMLINUX" "$SMLINUX".baq
 		fi
-		git clone --progress --single-branch git://github.com/enigma9o7/smlinux.git "$SMLINUX"
+		git clone --progress --single-branch https://github.com/VictorXPDE/smlinux "$SMLINUX"
 		if [ -d "$SMLINUX".baq ]; then
 			cp -rn "$SMLINUX".baq/* "$SMLINUX"/
 			rm -rf "$SMLINUX".baq
@@ -2222,7 +2222,7 @@ else   # The real start, the rest was script preperation and setup.
 		tput setaf 7 # white text
 		if [ ! "$OP1" = "--noweb" ]; then
 			exec 2> >(grep -v Gtk >&2) # Supress GTK Warnings
-			"$OPEN" "https://github.com/enigma9o7/smlinux#frequently-asked-questions" &disown
+			"$OPEN" "https://github.com/VictorXPDE/smlinux#frequently-asked-questions" &disown
 		fi
 		exit
 	else
@@ -2295,7 +2295,7 @@ else   # The real start, the rest was script preperation and setup.
 		fi
 		if [ ! -f "$SMLINUX"/config.py ]; then
 			echo Getting python config GUI...
-			wget -q https://raw.githubusercontent.com/enigma9o7/smlinux/master/config.py -P "$SMLINUX"
+			wget -q https://raw.githubusercontent.com/VictorXPDE/smlinux/master/config.py -P "$SMLINUX"
 		fi
 		if [ "$OSX_BUILD" = 1 ] || [ "$USER" = "root" ]; then
 			python3 -m pip install --upgrade pip
@@ -2670,14 +2670,14 @@ if [ ! -d "$BASEPATH"/"$PRESET" ]; then
 	cd "$BASEPATH"
 	if [ ! "$ANDROID" = 0 ]; then
 		greenecho "[3] Downloading sm64 Android source from $GIT repository..."
-		git clone --progress git://github.com/"$GIT" -b "$BRANCH" "$ANDROID"
+		git clone --progress https://github.com/"$GIT" -b "$BRANCH" "$ANDROID"
 		cd "$ANDROID"
 		git submodule init
 		git submodule update
 		./getSDL.sh
 	else
 		greenecho "[3] Downloading sm64 source from $GIT repository..."
-		git clone --progress git://github.com/"$GIT" -b "$BRANCH" "$PRESET"
+		git clone --progress https://github.com/"$GIT" -b "$BRANCH" "$PRESET"
 	fi
 fi
 if [ ! -d "$BASEPATH"/"$PRESET" ]; then
